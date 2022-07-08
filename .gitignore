@@ -128,13 +128,13 @@ dmypy.json
 # Pyre type checker
 .pyre/
 
-# Django 개발 환경 관련
-# 환경 설정 파일
+# Django 개발 관련
+# 설정값 및 보안 키가 저장된 JSON 파일
 settings.json
-# static 폴더
+# 수집된 static 파일이 저장된 디렉토리
 static/
-# migration 폴더
+# Django 마이그레이션 디렉토리
 /migrations/
 
-# VS Code workspace configuration
+# VS Code 작업 영역 환경 설정
 *.code-workspace

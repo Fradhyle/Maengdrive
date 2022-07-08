@@ -1,0 +1,22 @@
+{% extends "main/base.html" %}
+{% load static %}
+{% block content %}
+    <p>Hello, this is main index page.</p>
+    {{ year_calendar|safe }}
+    <table class="table table-hover table-bordered">
+        <thead>
+            <tr>
+                {% for weekday in weekdays %}
+                    <th scope="col">{{ weekday }}</th>
+                {% endfor %}
+            </tr>
+        </thead>
+        <tbody class="table-group-divider">
+            <tr>
+                {% for weekday in weekdays %}
+                    <td></td>
+                {% endfor %}
+            </tr>
+        </tbody>
+    </table>
+{% endblock %}
