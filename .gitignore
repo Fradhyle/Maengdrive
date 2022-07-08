@@ -135,3 +135,6 @@ settings.json
 static/
 # migration 폴더
 /migrations/
+
+# VS Code workspace configuration
+*.code-workspace
