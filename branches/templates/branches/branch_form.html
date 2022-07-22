@@ -1,11 +1,255 @@
 {% extends "main/base.html" %}
 {% load static %}
 {% block content %}
-<form action="" method="POST">
+<form action="" method="POST" id="branchForm" class="container d-grid gap-2">
     {% csrf_token %}
-    <table>
-        {{ form.as_table }}
-    </table>
-    <input type="submit" value="저장">
+    <div class="row justify-content-center align-items-center">
+        <label for="{{ form.name.id_for_label }}" class="col-2 col-form-label">
+            {{ form.name.label }}
+        </label>
+        <div class="col-6">
+            {{ form.name }}
+        </div>
+    </div>
+    <div class="row justify-content-center align-items-center">
+        <label for="{{ form.postcode.id_for_label }}" class="col-2 col-form-label">
+            {{ form.postcode.label }}
+        </label>
+        <div class="col-4">
+            {{ form.postcode }}
+        </div>
+        <div class="col-2 ms-1">
+            <!-- Address Search Modal Button -->
+            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#address-search-modal">
+                주소 검색
+            </button>
+        </div>
+    </div>
+    <div class="row justify-content-center align-items-center">
+        <label for="{{ form.address1.id_for_label }}" class="col-2 col-form-label">
+            {{ form.address1.label }}
+        </label>
+        <div class="col-6">
+            {{ form.address1 }}
+        </div>
+    </div>
+    <div class="row justify-content-center align-items-center">
+        <label for="{{ form.address2.id_for_label }}" class="col-2 col-form-label">
+            {{ form.address2.label }}
+        </label>
+        <div class="col-6">
+            {{ form.address2 }}
+        </div>
+    </div>
+    <div class="row justify-content-center align-items-center">
+        <label for="{{ form.phone1.id_for_label }}" class="col-2 col-form-label">
+            {{ form.phone1.label }}
+        </label>
+        <div class="col-6">
+            {{ form.phone1 }}
+        </div>
+    </div>
+    <div class="row justify-content-center align-items-center">
+        <label for="{{ form.phone2.id_for_label }}" class="col-2 col-form-label">
+            {{ form.phone2.label }}
+        </label>
+        <div class="col-6">
+            {{ form.phone2 }}
+        </div>
+    </div>
+    <div class="row justify-content-end align-items-center">
+        <div class="col-auto">
+            <button type="submit" class="btn btn-primary">저장</button>
+        </div>
+    </div>
+
+    <!-- Address Search Modal -->
+    <div class="modal fade" id="address-search-modal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+        aria-labelledby="address-search-modal" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="address-search-modal-title">주소 검색</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="닫기"></button>
+                </div>
+                <div class="modal-body" id="search-body">
+                    <div class="row justify-content-center align-items-center d-flex flex-row">
+                        <label for="keyword" class="col-2 col-form-label">
+                            검색어
+                        </label>
+                        <div class="col-7">
+                            <input type="text" class="form-control" id="keyword">
+                        </div>
+                        <div class="col-auto">
+                            <button type="button" class="btn btn-primary" onclick="getData()" id="search-button">
+                                검색
+                            </button>
+                        </div>
+                    </div>
+                    <div id="search-result">
+                        <!-- This area will be controlled by JavaScript -->
+                    </div>
+                </div>
+                <div class="modal-footer justify-content-center">
+                    <span>자료 출처: <a href="https://www.juso.go.kr">주소정보누리집</a></span>
+                    <!-- <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
+                        <button type="button" class="btn btn-primary">저장</button> -->
+                </div>
+            </div>
+        </div>
+    </div>
 </form>
+
+<script type="text/javascript">
+    // 공통적으로 사용하는 변수 선언
+    // 주소 API 기본 주소
+    const base_url = "https://www.juso.go.kr/addrlink/addrLinkApi.do";
+    // API 키
+    const confmKey = "{{ confmKey }}";
+    // 현재 페이지 번호
+    let currentPage = new Number();
+    // 페이지당 출력할 결과 수
+    let countPerPage = new Number();
+    // 검색어 변수
+    let keyword = new String();
+    // 반환받을 결과를 JSON으로 받도록 선언
+    const resultType = "json";
+    // HTML 모달
+    let modal = document.getElementById("address-search-modal");
+    // HTML 검색 결과 블록
+    let searchResult = document.getElementById("search-result");
+    // 검색어 입력 칸
+    let keyword_input = document.getElementById("keyword");
+
+    // 검색어 입력 칸에서 엔터 키 누르면 검색 버튼을 클릭하도록 함
+    keyword_input.addEventListener("keypress", function (event) {
+        if (event.key === "Enter") {
+            event.preventDefault();
+            document.getElementById("search-button").click();
+        }
+    });
+
+    function createResultTable(results) {
+        // HTML 테이블 생성
+        let table = document.createElement("table");
+        // 부트스트랩 디자인 적용
+        // 마우스 올렸을 때 줄 진하게, 캡션 상단 배치
+        table.setAttribute("class", "table table-hover caption-top")
+
+        // 검색 건수 캡션
+        let caption = document.createElement("caption");
+        // namedItem() 메서드 사용을 위해 ID 지정
+        caption.setAttribute("id", "tableCaption");
+        // 캡션 내용 설정
+        caption.innerHTML = "검색 결과: " + results.common.totalCount + "건"
+            + "	" + "페이지: " + results.common.currentPage + " / " + results.common.totalPage;
+        // 테이블에 캡션 추가
+        if (table.children.length == 0) {
+            table.appendChild(caption);
+        } else {
+            table.replaceChild(caption, table.children.namedItem("tableCaption"));
+        };
+
+        // 테이블 헤더 엘리먼트 생성
+        let header = document.createElement("thead");
+        // 테이블 헤더 내 행 생성
+        let headerRow = document.createElement("tr");
+        // 테이블 헤더의 열에 들어갈 내용 배열 생성
+        let headerRowContents = ["우편번호", "도로명 주소", "참고 항목"];
+        // forEach를 통해 열 내용 자동 설정 후 행에 삽입
+        headerRowContents.forEach(content => {
+            // 테이블 헤더 열 생성
+            let column = document.createElement("th");
+            // 부트스트랩에서 식별할 수 있도록 scope에 col 속성 부여
+            column.setAttribute("scope", "col");
+            // 열 내용 입력
+            column.innerHTML = content;
+            // 헤더 행에 추가
+            headerRow.appendChild(column);
+        });
+        // 입력된 헤더 행을 헤더에 추가
+        header.appendChild(headerRow);
+        // 테이블에 헤더 추가
+        table.appendChild(header);
+
+        // 테이블 바디 엘리먼트 생성
+        let tableBody = document.createElement("tbody");
+
+        // 반환 받은 JSON 내 juso 키의 값을 순환하며 각 행 내용 생성
+        results.juso.forEach(address => {
+            // 테이블 바디 내 행 생성
+            let row = document.createElement("tr");
+            // 행 클릭시 모달 닫기 설정. 추후 실환경에서 삭제할 것
+            row.setAttribute("data-bs-dismiss", "modal");
+
+            // 각 행의 우편번호 열 생성
+            let postcode = document.createElement("td");
+            // 나중에 쉽게 접근하기 위해 name 속성 부여
+            postcode.setAttribute("name", "postcode");
+            // 우편번호 열 내용을 juso JSON 내 zipNo로 입력
+            postcode.innerHTML = address.zipNo;
+            // 행에 우편번호 열 추가
+            row.appendChild(postcode);
+
+            // 각 행의 도로명 주소 열 생성
+            let roadAddress = document.createElement("td");
+            // 나중에 쉽게 접근하기 위해 name 속성 부여
+            roadAddress.setAttribute("name", "road-address");
+            // 도로명 주소 열 내용을 juso JSON 내 roadAddrPart1(상세 주소 없는 도로명 주소)로 입력        
+            roadAddress.innerHTML = address.roadAddrPart1;
+            // 행에 도로명 주소 열 추가
+            row.appendChild(roadAddress);
+
+            // 각 행의 참고 항목 열 생성
+            let reference = document.createElement("td");
+            // 나중에 쉽게 접근하기 위해 name 속성 부여
+            reference.setAttribute("name", "reference");
+            // 참고 항목 열 내용을 juso JSON 내 roadAddrPart2(도로명 주소의 참고 항목)로 입력
+            reference.innerHTML = address.roadAddrPart2;
+            // 행에 참고 항목 열 추가
+            row.appendChild(reference);
+
+            // 테이블 바디에 행 추가
+            tableBody.appendChild(row);
+        });
+
+        // 테이블에 테이블 바디 추가
+        table.appendChild(tableBody);
+
+        return table;
+    };
+
+    async function getData(currentPage = 1, countPerPage = 10, keyword) {
+        keyword = document.getElementById("keyword").value;
+
+        let query_url = base_url
+            + "?confmKey=" + confmKey
+            + "&currentPage=" + currentPage
+            + "&countPerPage=" + countPerPage
+            + "&keyword=" + keyword
+            + "&resultType=" + resultType;
+
+        const response = await fetch(query_url);
+        responseJson = await response.json();
+        results = responseJson.results;
+        totalCount = results.common.totalCount;
+        results.common["totalPage"] = Math.ceil(totalCount / results.common.countPerPage);
+
+        let addrTable = createResultTable(results);
+
+        searchResult.appendChild(addrTable);
+
+        addrTable.addEventListener("click", event => {
+            let tr = event.target.parentNode;
+            let tds = Array.from(tr.children)
+
+            let postcode = document.getElementById("id_postcode");
+            postcode.setAttribute("value", tds[0].innerText)
+            let addr1 = document.getElementById("id_address1");
+            addr1.setAttribute("value", tds[1].innerText)
+            let addr2 = document.getElementById("id_address2");
+            addr2.setAttribute("value", tds[2].innerText)
+        });
+    }
+</script>
 {% endblock %}

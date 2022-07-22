@@ -1,4 +1,4 @@
-"""Maengdrive URL Configuration
+"""Pandamonium URL Configuration
 
 The `urlpatterns` list routes URLs to views. For more information please see:
     https://docs.djangoproject.com/en/4.0/topics/http/urls/
@@ -14,13 +14,11 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.urls import path
-from branches import views
 
+from schedules import views
 
-app_name = "branches"
+app_name = "schedules"
 
 urlpatterns = [
     path("", views.IndexView.as_view(), name="index"),
-    path("add/", views.AddBranchView.as_view(), name="branch-add"),
-    path("<int:srl>/", views.BranchDetailView.as_view(), name="branch-detail"),
 ]

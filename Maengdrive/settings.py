@@ -75,11 +75,13 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
 ]
 
-apps = [
-    _.stem
-    for _ in BASE_DIR.glob("*")
-    if _.is_dir() and ".git" not in _.stem and _.stem != BASE_DIR.stem
-]
+apps = []
+for _ in BASE_DIR.glob("*"):
+    if _.is_dir():
+        if _.stem not in [".git", ".vscode"]:
+            if _.stem != BASE_DIR.stem:
+                apps.append(_.stem)
+
 INSTALLED_APPS.extend(apps)
 
 MIDDLEWARE = [

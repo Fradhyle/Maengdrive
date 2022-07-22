@@ -1,6 +1,7 @@
-from django.http import HttpResponseRedirect
+from django.conf import settings
 from django.views.generic.base import TemplateView
-from django.views.generic.edit import FormView
+from django.views.generic.detail import DetailView
+from django.views.generic.edit import CreateView
 
 from branches.forms import BranchForm
 from branches.models import Branch
@@ -27,10 +28,28 @@ class IndexView(TemplateView):
         return context
 
 
-class AddBranchView(FormView):
+class AddBranchView(CreateView):
     template_name = "branches/branch_form.html"
     form_class = BranchForm
     success_url = "/"
 
     def form_valid(self, form):
         return super().form_valid(form)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["page_title"] = "지점 추가"
+        context["confmKey"] = settings.SETTINGS["confmKey"]
+
+        return context
+
+
+class BranchDetailView(DetailView):
+    def get_queryset(self, srl):
+        return Branch.objects.filter(srl=srl)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["branch_detail"] = self.get_queryset(self.kwargs["srl"])
+
+        return context

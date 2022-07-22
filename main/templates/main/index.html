@@ -19,4 +19,78 @@
             </tr>
         </tbody>
     </table>
+
+    <div>
+        <form method="post" action="{% url 'main:index' %}" class="form-control">
+            {% csrf_token %}
+            <label for="search_input" class="form-label">주소</label>
+            <input type="text" class="form-control" id="search_input" name="search_input">
+            <button type="submit">검색</button>
+        </form>
+    </div>
+
+    {% if results %}
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th scope="col">우편번호</th>
+                    <th scope="col">도로명 주소</th>
+                    <th scope="col">참고 항목</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for address in results.juso %}
+                    <tr>
+                        <td>{{ address.zipNo }}</td>
+                        <td>{{ address.roadAddrPart1 }}</td>
+                        <td>{{ address.roadAddrPart2 }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        
+        <nav aria-label="page navigation">
+            <ul class="pagination">
+                <li class="page-item {% if results.common.currentPage == '1' %}disabled{% endif %}">
+                    <a class="page-link">Previous</a>
+                </li>
+                <li class="page-item">
+                    {% if results.common.currentPage != "1" %}
+                        <a class="page-link" href="#">{{ results.common.currentPage|add:"-2" }}</a>
+                    {% else %}
+                        <span class="page-link">&nbsp;</span>
+                    {% endif %}
+                </li>
+                <li class="page-item">
+                    {% if results.common.currentPage != "1" %}
+                        <a class="page-link" href="#">{{ results.common.currentPage|add:"-1" }}</a>
+                    {% else %}
+                        <span class="page-link">&nbsp;</span>
+                    {% endif %}
+                </li>
+                <li class="page-item active" aria-current="page">
+                    <a class="page-link" href="#">{{ results.common.currentPage }}</a>
+                </li>
+                <li class="page-item">
+                    {% if results.common.currentPage != "results.common.totalPage" %}
+                        <a class="page-link" href="#">{{ results.common.currentPage|add:"1" }}</a>
+                    {% else %}
+                        <span class="page-link">&nbsp;</span>
+                    {% endif %}
+                </li>
+                <li class="page-item">
+                    {% if results.common.currentPage != "results.common.totalPage" %}
+                        <a class="page-link" href="#">{{ results.common.currentPage|add:"2" }}</a>
+                    {% else %}
+                        <span class="page-link">&nbsp;</span>
+                    {% endif %}
+                </li>
+                <li class="page-item {% if results.common.currentPage == results.common.totalPage %}disabled{% endif %}">
+                    <a class="page-link" href="#">Next</a>
+                </li>
+            </ul>
+        </nav>
+        {{ results|json_script:"results" }}
+    {% endif %}
+
 {% endblock %}
