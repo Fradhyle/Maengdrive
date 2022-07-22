@@ -134,7 +134,7 @@ settings.json
 # 수집된 static 파일이 저장된 디렉토리
 static/
 # Django 마이그레이션 디렉토리
-/migrations/
+*/migrations/
 
 # VS Code 작업 영역 환경 설정
 /.vscode
