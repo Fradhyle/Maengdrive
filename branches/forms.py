@@ -39,6 +39,7 @@ class BranchForm(forms.ModelForm):
             "address1": forms.TextInput(
                 attrs={
                     "class": "form-control",
+                    "disabled": "",
                     "readonly": "",
                     "aria-describedby": "id_address1",
                 }
@@ -46,6 +47,7 @@ class BranchForm(forms.ModelForm):
             "address2": forms.TextInput(
                 attrs={
                     "class": "form-control",
+                    "disabled": "",
                     "readonly": "",
                     "aria-describedby": "id_address2",
                 }
