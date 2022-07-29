@@ -3,72 +3,72 @@
 {% block content %}
     <form action="" method="POST" id="branchForm" class="container d-grid gap-3 justify-content-evenly align-items-center">
         {% csrf_token %}
-
+        
         <div class="row">
-            <label for="{{ form.name.id_for_label }}" class="col-3 col-form-label text-nowrap">{{ form.name.label }}</label>
+            <label class="col-3 col-form-label text-nowrap" for="{{ form.name.id_for_label }}">{{ form.name.label }}</label>
             <div class="col">{{ form.name }}</div>
         </div>
-
+        
         <div class="row">
-            <label for="{{ form.postcode.id_for_label }}" class="col-3 col-form-label text-nowrap">{{ form.postcode.label }}</label>
+            <label class="col-3 col-form-label text-nowrap" for="{{ form.postcode.id_for_label }}">{{ form.postcode.label }}</label>
             <div class="col">{{ form.postcode }}</div>
             <div class="col-auto text-nowrap">
                 <!-- Address Search Modal Button -->
-                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#address-search-modal">주소 검색</button>
+                <button class="btn btn-primary" data-bs-target="#address-search-modal" data-bs-toggle="modal" type="button" onclick="catchEnter()">주소 검색</button>
             </div>
         </div>
-
+        
         <div class="row">
-            <label for="{{ form.address1.id_for_label }}" class="col-3 col-form-label text-nowrap">{{ form.address1.label }}</label>
+            <label class="col-3 col-form-label text-nowrap" for="{{ form.address1.id_for_label }}">{{ form.address1.label }}</label>
             <div class="col">{{ form.address1 }}</div>
         </div>
-
+        
         <div class="row">
-            <label for="{{ form.address2.id_for_label }}" class="col-3 col-form-label text-nowrap">{{ form.address2.label }}</label>
+            <label class="col-3 col-form-label text-nowrap" for="{{ form.address2.id_for_label }}">{{ form.address2.label }}</label>
             <div class="col">{{ form.address2 }}</div>
         </div>
-
+        
         <div class="row">
-            <label for="{{ form.phone1.id_for_label }}" class="col-3 col-form-label text-nowrap">{{ form.phone1.label }}</label>
+            <label class="col-3 col-form-label text-nowrap" for="{{ form.phone1.id_for_label }}">{{ form.phone1.label }}</label>
             <div class="col">{{ form.phone1 }}</div>
         </div>
-
+        
         <div class="row">
-            <label for="{{ form.phone2.id_for_label }}" class="col-3 col-form-label text-nowrap">{{ form.phone2.label }}</label>
+            <label class="col-3 col-form-label text-nowrap" for="{{ form.phone2.id_for_label }}">{{ form.phone2.label }}</label>
             <div class="col">{{ form.phone2 }}</div>
         </div>
-
+        
         <div class="row">
             <div class="col">
-                <button type="submit" class="btn btn-primary">저장</button>
+                <button class="btn btn-primary" type="submit">저장</button>
             </div>
         </div>
-
+        
         <!-- Address Search Modal -->
-        <div class="modal fade" id="address-search-modal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="address-search-modal" aria-hidden="true">
+        <div class="modal fade" id="address-search-modal" data-bs-backdrop="static" data-bs-keyboard="false" aria-hidden="true" aria-labelledby="address-search-modal" tabindex="-1">
             <div class="modal-dialog modal-lg">
                 <div class="modal-content">
                     <div class="modal-header text-center">
                         <h5 class="modal-title w-100" id="address-search-modal-title">주소 검색</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="닫기"></button>
+                        <button class="btn-close" data-bs-dismiss="modal" type="button" aria-label="닫기" onclick="resetModal()"></button>
                     </div>
-
+                    
                     <div class="modal-body container" id="search-body">
                         <div class="row justify-content-evenly align-items-center d-flex flex-row">
-                            <label for="keyword" class="col-2 col-form-label text-center">검색어</label>
+                            <label class="col-2 col-form-label text-center" for="keyword">검색어</label>
                             <div class="col-6">
-                                <input type="text" class="form-control" id="keyword">
+                                <input class="form-control" id="keyword" type="text" placeholder="검색어를 입력하세요">
                             </div>
                             <div class="col-auto">
-                                <button type="button" class="btn btn-primary" onclick="searchAddress()" id="search-button">검색</button>
+                                <button class="btn btn-primary" id="search-button" type="button" onclick="searchAddress()">검색</button>
                             </div>
                         </div>
-
-                        <div id="search-result" class="row">
+                        
+                        <div class="row" id="search-result">
                             <!-- This area will be controlled by JavaScript -->
                         </div>
                     </div>
-
+                    
                     <div class="modal-footer justify-content-center">
                         <span>자료 출처: <a href="https://www.juso.go.kr">주소정보누리집</a></span>
                         <!-- <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
@@ -78,302 +78,9 @@
             </div>
         </div>
     </form>
-
+    
+    <script type="text/javascript" src="{% static 'branches/address-search.js' %}"></script>
     <script type="text/javascript">
-        // 검색어 입력 칸에서 엔터 키 누르면 검색 버튼을 클릭하도록 함
-        let keyword_input = document.getElementById("keyword");
-        keyword_input.addEventListener("keypress", function (event) {
-            if (event.key === "Enter") {
-                event.preventDefault();
-                document.getElementById("search-button").click();
-            }
-        });
-
-        // 검색 결과 테이블을 만드는 함수
-        // 반드시 queryAddress에서 반환 받은 results 오브젝트를 넣을 것
-        function createResultTable(results) {
-            // HTML 테이블 생성
-            let table = document.createElement("table");
-            // 부트스트랩 디자인 적용
-            // 마우스 올렸을 때 줄 진하게, 캡션 상단 배치
-            table.setAttribute("class", "table table-hover table-responsive caption-top align-middle");
-            // 추후 접근을 위해 ID 부여
-            table.setAttribute("id", "result-table");
-
-            // 검색 건수 캡션
-            let caption = document.createElement("caption");
-            // namedItem() 메서드 사용을 위해 ID 지정
-            caption.setAttribute("id", "tableCaption");
-            // 캡션 내용 설정
-            caption.innerHTML = "검색 결과: " + results.common.totalCount + "건" + "    " + "페이지: " + results.common.currentPage + " / " + results.common.totalPage;
-            // 테이블에 캡션 추가
-            if (table.children.length == 0) {
-                table.appendChild(caption);
-            } else {
-                table.replaceChild(caption, table.children.namedItem("tableCaption"));
-            };
-
-            // 테이블 헤더 엘리먼트 생성
-            let header = document.createElement("thead");
-            // 테이블 헤더 내 행 생성
-            let headerRow = document.createElement("tr");
-            // 테이블 헤더의 열에 들어갈 내용 배열 생성
-            let headerRowContents = ["우편번호", "도로명 주소", "참고 항목"];
-            // forEach를 통해 열 내용 자동 설정 후 행에 삽입
-            headerRowContents.forEach(content => {
-                // 테이블 헤더 열 생성
-                let column = document.createElement("th");
-                // 부트스트랩에서 식별할 수 있도록 scope에 col 속성 부여
-                column.setAttribute("scope", "col");
-                // 열 내용 입력
-                column.innerHTML = content;
-                // 헤더 행에 추가
-                headerRow.appendChild(column);
-            });
-            // 입력된 헤더 행을 헤더에 추가
-            header.appendChild(headerRow);
-            // 테이블에 헤더 추가
-            table.appendChild(header);
-
-            // 테이블 바디 엘리먼트 생성
-            let tableBody = document.createElement("tbody");
-            tableBody.setAttribute("class", "table-group-divider");
-            // 반환 받은 JSON 내 juso 키의 값을 순환하며 각 행 내용 생성
-            results.juso.forEach(address => {
-                // 테이블 바디 내 행 생성
-                let row = document.createElement("tr");
-                // 행 클릭시 모달 닫기 설정. 추후 실환경에서 삭제할 것
-                row.setAttribute("data-bs-dismiss", "modal");
-                // 각 행의 우편번호 열 생성
-                let postcode = document.createElement("td");
-                // 나중에 쉽게 접근하기 위해 name 속성 부여
-                postcode.setAttribute("name", "postcode");
-                // 우편번호 열 내용을 juso JSON 내 zipNo로 입력
-                postcode.innerHTML = address.zipNo;
-                // 행에 우편번호 열 추가
-                row.appendChild(postcode);
-
-                // 각 행의 도로명 주소 열 생성
-                let roadAddress = document.createElement("td");
-                // 나중에 쉽게 접근하기 위해 name 속성 부여
-                roadAddress.setAttribute("name", "road-address");
-                // 도로명 주소 열 내용을 juso JSON 내 roadAddrPart1(상세 주소 없는 도로명 주소)로 입력
-                roadAddress.innerHTML = address.roadAddrPart1;
-                // 행에 도로명 주소 열 추가
-                row.appendChild(roadAddress);
-
-                // 각 행의 참고 항목 열 생성
-                let reference = document.createElement("td");
-                // 나중에 쉽게 접근하기 위해 name 속성 부여
-                reference.setAttribute("name", "reference");
-                // 참고 항목 열 내용을 juso JSON 내 roadAddrPart2(도로명 주소의 참고 항목)로 입력
-                reference.innerHTML = address.roadAddrPart2;
-                // 행에 참고 항목 열 추가
-                row.appendChild(reference);
-                // 테이블 바디에 행 추가
-                tableBody.appendChild(row);
-            });
-
-            // 테이블에 테이블 바디 추가
-            table.appendChild(tableBody);
-
-            return table;
-        };
-
-        // 주소정보누리집 API에 질의하는 함수
-        async function queryAddress(currentPage=1, countPerPage=10, keyword) {
-            // 주소정보누리집 API 기본 주소
-            var url = new URL("https://www.juso.go.kr/addrlink/addrLinkApi.do");
-            // API 질의에 필요한 파라미터 선언
-            var params = new URLSearchParams({
-                "confmKey": "{{ confmKey }}",
-                "currentPage": currentPage,
-                "countPerPage": countPerPage,
-                "keyword": keyword,
-                "resultType": "json"
-            });
-            // URL과 파라미터 결합
-            url.search = params;
-
-            // Fetch API를 활용하여 주소 API에 요청
-            let response = await fetch(url);
-            let responseJson = await response.json();
-            let results = responseJson.results;
-
-            return results;
-        };
-
-        // 페이지 기능 생성 함수
-        function makePage(currentPage, totalPage) {
-            // 입력 받은 현재 쪽, 전체 쪽수 파라미터를 숫자로 변환
-            var currentPage = Number(currentPage);
-            var totalPage = Number(totalPage);
-
-            // Bootstrap 공식 문서의 Pagination 참고
-            let pageNav = document.createElement("nav");
-            pageNav.setAttribute("aria-label", "페이지 내비게이션");
-            pageNav.setAttribute("id", "page-nav");
-
-            let pageNavUl = document.createElement("ul");
-            pageNavUl.setAttribute("class", "pagination justify-content-center");
-
-            // 전체 쪽수가 1일 경우 처음, 이전, 다음, 끝 버튼을 삭제하고 1만 나오게 함
-            if (totalPage == 1) {
-                let list = document.createElement("li");
-                list.setAttribute("class", "page-item");
-                
-                let anchor = document.createElement("a");
-                anchor.setAttribute("class", "page-link active");
-                anchor.setAttribute("href", "#");
-                anchor.setAttribute("aria-label", currentPage + "쪽");
-                anchor.innerHTML = currentPage;
-                
-                list.setAttribute("aria-current", "page");
-
-                list.appendChild(anchor);
-
-                pageNavUl.appendChild(list);
-            } else {
-                // 현재 쪽이 3 미만인 경우 쪽 이동 버튼을 눌러도 [1, 2, 3, 4, 5]로 나오게 함
-                if (currentPage < 3) {
-                    var pages = Array(5).fill().map((_, i) => i + 1);
-                // 현재 쪽이 마지막 쪽에서 두번째 이하인 경우 쪽 이동 버튼을 눌러도 [마지막-4, 마지막-3, 마지막-2, 마지막-1, 마지막]으로 나오게 함
-                } else if (currentPage > totalPage - 2) {
-                    var pages = Array(5).fill().map((_, i) => totalPage - i).reverse();
-                // 그 외의 경우 현재 쪽을 기준으로 앞 두 쪽과 뒤 두 쪽이 나오게 함
-                } else {
-                    let start = currentPage - 2;
-                    let end = currentPage + 2;
-                    var pages = Array(end - start + 1).fill().map(() => start++);
-                };
-                
-                for (let liCount = 0; liCount < 9; liCount++) {
-                    // li 엘리먼트 생성 및 공통 적용 클래스 입력
-                    let list = document.createElement("li");
-                    list.setAttribute("class", "page-item");
-                    
-                    // a 엘리먼트 생성 및 공통 적용 클래스 입력
-                    let anchor = document.createElement("a");
-                    anchor.setAttribute("class", "page-link");
-                    
-                    if (liCount == 0) {
-                        anchor.setAttribute("aria-label", "처음");
-                        // 현재 쪽이 1쪽인 경우 처음 버튼 사용 금지 처리
-                        if (currentPage == 1) {
-                            list.setAttribute("class", list.getAttribute("class") + " disabled");
-                            anchor.setAttribute("tabindex", "-1");
-                        };
-                        anchor.innerHTML = "처음";
-                        list.appendChild(anchor);
-                    } else if (liCount == 1) {
-                        anchor.setAttribute("aria-label", "이전");
-                        // 현재 쪽이 1쪽인 경우 이전 버튼 사용 금지 처리
-                        if (currentPage == 1) {
-                            list.setAttribute("class", list.getAttribute("class") + " disabled");
-                            anchor.setAttribute("tabindex", "-1");
-                        };
-                        anchor.innerHTML = "이전";
-                        list.appendChild(anchor);
-                    } else if (liCount == 7) {
-                        anchor.setAttribute("aria-label", "다음");
-                        // 현재 쪽이 마지막 쪽인 경우 다음 버튼 사용 금지 처리
-                        if (currentPage == totalPage) {
-                            list.setAttribute("class", list.getAttribute("class") + " disabled");
-                            anchor.setAttribute("tabindex", "-1");
-                        };
-                        anchor.innerHTML = "다음";
-                        list.appendChild(anchor);
-                    } else if (liCount == 8) {
-                        anchor.setAttribute("aria-label", "끝");
-                        // 현재 쪽이 마지막 쪽인 경우 끝 버튼 사용 금지 처리
-                        if (currentPage == totalPage) {
-                            list.setAttribute("class", list.getAttribute("class") + " disabled");
-                            anchor.setAttribute("tabindex", "-1");
-                        };
-                        anchor.innerHTML = "끝";
-                        list.appendChild(anchor);
-                    } else {
-                        let page = pages[liCount - 2];
-                        anchor.setAttribute("aria-label", page + "쪽");
-                        if (page == currentPage) {
-                            list.setAttribute("class", list.getAttribute("class") + " active");
-                            list.setAttribute("aria-current", "page");
-                        };
-                        anchor.innerHTML = page;
-                        list.appendChild(anchor);
-                    };
-                    pageNavUl.appendChild(list);
-                };
-            };
-
-            pageNav.appendChild(pageNavUl);
-
-            return pageNav;
-        };
-
-        async function searchAddress(currentPage=1) {
-            let keyword = document.getElementById("keyword").value;
-            let searchResult = document.getElementById("search-result");
-
-            let results = await queryAddress(currentPage, 10, keyword);
-
-            results.common["totalPage"] = Math.ceil(results.common.totalCount / results.common.countPerPage);
-
-            let addrTable = createResultTable(results);
-
-            if (searchResult.children.length == 0) {
-                searchResult.appendChild(addrTable);
-            } else {
-                currentTable = document.getElementById("result-table");
-                searchResult.replaceChild(addrTable, currentTable);
-            };
-
-            let pageNav = makePage(results.common.currentPage, results.common.totalPage);
-            
-            let currentPageNav = document.getElementById("page-nav");
-
-            if (currentPageNav == null) {
-                searchResult.appendChild(pageNav);
-            } else {
-                searchResult.replaceChild(pageNav, currentPageNav);
-            };
-
-            currentPageNav = document.getElementById("page-nav");
-
-            let pageList = currentPageNav.children[0]
-
-            pageList.addEventListener("click", event => {
-                if (event.target.classList.contains('disabled') == false) {
-                    let value = new Number(event.target.innerText);
-                    if (isNaN(value)) {
-                        value = event.target.innerText;
-                        if (value == "처음") {
-                            searchAddress(1);
-                        } else if (value == "이전") {
-                            searchAddress(currentPage-1);
-                        } else if (value == "다음") {
-                            searchAddress(currentPage+1);
-                        } else if (value == "끝") {
-                            searchAddress(results.common.totalPage);
-                        }
-                    } else {
-                        searchAddress(value);
-                    }
-                }
-            });
-            
-            let tbody = addrTable.querySelector("tbody");
-
-            tbody.addEventListener("click", event => {
-                let tr = event.target.parentNode;
-                let tds = Array.from(tr.children)
-                let postcode = document.getElementById("id_postcode");
-                postcode.setAttribute("value", tds[0].innerText)
-                let addr1 = document.getElementById("id_address1");
-                addr1.setAttribute("value", tds[1].innerText)
-                let addr2 = document.getElementById("id_address2");
-                addr2.setAttribute("value", tds[2].innerText)
-            });
-        };
+        const confmKey = "{{ confmKey }}"
     </script>
 {% endblock %}

@@ -27,3 +27,5 @@
 ### 주의사항
 1. ```whitenoise```는 테스트 환경 구성을 위한 것이므로, 실환경에서는 HTTP 서버 구축을 통해 static 파일을 서비스할 것
 2. Azure Web App의 경우 DB로 SQLite를 사용할 수 없음. 실환경에서 다른 DBMS 사용을 고려할 것
+3. HTML 작성시 속성 입력 순서는 다음에 따를 것  
+https://codeguide.co/#attribute-order

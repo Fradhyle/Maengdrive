@@ -2,7 +2,6 @@
 <!DOCTYPE html>
 <html lang="ko">
     <head>
-        
         <!-- Meta Tags -->
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -19,16 +18,16 @@
         <div class="container-fluid">
             <div class="row">
                 <div class="col-2">
-                    <nav class="navbar bg-light nav-fill justify-content-center align-items-start" style="position: fixed; top: 0; bottom: 0;">
+                    <nav class="navbar bg-light nav-fill justify-content-center align-items-start" style="position: fixed; top: 0; bottom: 0; max-width: 16%">
                         <div class="container-fluid justify-content-center">
                             <a class="navbar-brand" href="{% url 'main:index' %}">
-                                <img src="{% static 'main/img/maeng_logo.jpg' %}" alt="맹드라이브" aria-label="맹드라이브" class="img-fluid">
+                                <img class="img-fluid" src="{% static 'main/img/maeng_logo.jpg' %}" alt="맹드라이브" aria-label="맹드라이브">
                             </a>
                         </div>
                         <hr>
-                        <ul class="nav nav-pills navbar-nav flex-column">
+                        <ul class="nav nav-pills navbar-nav flex-column align-items-start">
                             <li class="nav-item dropdown">
-                                <a class="nav-link dropdown-toggle" href="#" id="branches-dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">지점 관리</a>
+                                <a class="nav-link dropdown-toggle" id="branches-dropdown" data-bs-toggle="dropdown" href="#" role="button" aria-expanded="false">지점 관리</a>
                                 <ul class="dropdown-menu text-center" aria-labelledby="branches-dropdown">
                                     <li><a class="dropdown-item" href="{% url 'branches:index' %}">지점 목록</a></li>
                                     <li><a class="dropdown-item" href="{% url 'branches:branch-add' %}">지점 추가</a></li>
