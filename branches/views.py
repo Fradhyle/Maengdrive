@@ -1,4 +1,6 @@
 from django.conf import settings
+from django.forms import ValidationError
+from django.urls import reverse_lazy
 from django.views.generic.base import TemplateView
 from django.views.generic.detail import DetailView
 from django.views.generic.edit import CreateView
@@ -30,11 +32,16 @@ class IndexView(TemplateView):
 
 class AddBranchView(CreateView):
     template_name = "branches/branch_form.html"
+    model = Branch
     form_class = BranchForm
-    success_url = "/"
+    context_object_name = "branch_form"
+    success_url = reverse_lazy("branches:index")
 
     def form_valid(self, form):
         return super().form_valid(form)
+
+    def form_invalid(self, form):
+        return super().form_invalid(form)
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)

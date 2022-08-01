@@ -1,5 +1,6 @@
 from django.core.validators import RegexValidator
 from django.db import models
+from django.urls import reverse
 
 # Create your models here.
 phone_validator = RegexValidator(
@@ -12,15 +13,28 @@ class Branch(models.Model):
     srl = models.BigAutoField(primary_key=True, verbose_name="연번")
     name = models.TextField(verbose_name="지점명")
     postcode = models.CharField(
-        max_length=5, validators=[postcode_validator], verbose_name="우편번호"
+        max_length=5,
+        validators=[
+            postcode_validator,
+        ],
+        verbose_name="우편번호",
     )
     address1 = models.TextField(verbose_name="도로명 주소")
     address2 = models.TextField(verbose_name="상세 주소", blank=True)
     phone1 = models.CharField(
-        max_length=13, validators=[phone_validator], verbose_name="전화번호 1"
+        max_length=13,
+        validators=[
+            phone_validator,
+        ],
+        verbose_name="전화번호 1",
     )
     phone2 = models.CharField(
-        max_length=13, validators=[phone_validator], verbose_name="전화번호 2"
+        max_length=13,
+        validators=[
+            phone_validator,
+        ],
+        verbose_name="전화번호 2",
+        blank=True,
     )
     is_opened = models.BooleanField(default=True, verbose_name="운영 여부")
 
@@ -29,3 +43,6 @@ class Branch(models.Model):
 
     def __str__(self):
         return self.name
+
+    def get_absolute_url(self):
+        return reverse("branch-detail", kwargs={"srl": self.srl})

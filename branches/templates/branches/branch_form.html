@@ -3,13 +3,16 @@
 {% block content %}
     <form action="" method="POST" id="branchForm" class="container d-grid gap-3 justify-content-evenly align-items-center">
         {% csrf_token %}
+        {{ form.non_field_errors }}
         
         <div class="row">
+            {{ form.name.errors }}
             <label class="col-3 col-form-label text-nowrap" for="{{ form.name.id_for_label }}">{{ form.name.label }}</label>
             <div class="col">{{ form.name }}</div>
         </div>
         
         <div class="row">
+            {{ form.postcode.errors }}
             <label class="col-3 col-form-label text-nowrap" for="{{ form.postcode.id_for_label }}">{{ form.postcode.label }}</label>
             <div class="col">{{ form.postcode }}</div>
             <div class="col-auto text-nowrap">
@@ -19,27 +22,31 @@
         </div>
         
         <div class="row">
+            {{ form.address1.errors }}
             <label class="col-3 col-form-label text-nowrap" for="{{ form.address1.id_for_label }}">{{ form.address1.label }}</label>
             <div class="col">{{ form.address1 }}</div>
         </div>
         
         <div class="row">
+            {{ form.address2.errors }}
             <label class="col-3 col-form-label text-nowrap" for="{{ form.address2.id_for_label }}">{{ form.address2.label }}</label>
             <div class="col">{{ form.address2 }}</div>
         </div>
         
         <div class="row">
+            {{ form.phone1.errors }}
             <label class="col-3 col-form-label text-nowrap" for="{{ form.phone1.id_for_label }}">{{ form.phone1.label }}</label>
             <div class="col">{{ form.phone1 }}</div>
         </div>
         
         <div class="row">
+            {{ form.phone2.errors }}
             <label class="col-3 col-form-label text-nowrap" for="{{ form.phone2.id_for_label }}">{{ form.phone2.label }}</label>
             <div class="col">{{ form.phone2 }}</div>
         </div>
         
         <div class="row">
-            <div class="col">
+            <div class="col d-flex justify-content-end">
                 <button class="btn btn-primary" type="submit">저장</button>
             </div>
         </div>

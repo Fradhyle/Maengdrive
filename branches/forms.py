@@ -26,12 +26,13 @@ class BranchForm(forms.ModelForm):
             "name": forms.TextInput(
                 attrs={
                     "class": "form-control",
+                    "placeholder": "'점'을 제외한 지점명을 입력하세요",
                 }
             ),
             "postcode": forms.NumberInput(
                 attrs={
                     "class": "form-control",
-                    "disabled": "",
+                    "placeholder": "주소 검색을 이용하세요",
                     "readonly": "",
                     "aria-describedby": "id_postcode",
                 }
@@ -39,7 +40,7 @@ class BranchForm(forms.ModelForm):
             "address1": forms.TextInput(
                 attrs={
                     "class": "form-control",
-                    "disabled": "",
+                    "placeholder": "주소 검색을 이용하세요",
                     "readonly": "",
                     "aria-describedby": "id_address1",
                 }
@@ -47,7 +48,7 @@ class BranchForm(forms.ModelForm):
             "address2": forms.TextInput(
                 attrs={
                     "class": "form-control",
-                    "disabled": "",
+                    "placeholder": "주소 검색을 이용하세요",
                     "readonly": "",
                     "aria-describedby": "id_address2",
                 }
@@ -55,11 +56,13 @@ class BranchForm(forms.ModelForm):
             "phone1": forms.NumberInput(
                 attrs={
                     "class": "form-control",
+                    "placeholder": "숫자만 입력하세요",
                 }
             ),
             "phone2": forms.NumberInput(
                 attrs={
                     "class": "form-control",
+                    "placeholder": "숫자만 입력하세요",
                 }
             ),
         }
