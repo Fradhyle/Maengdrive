@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+{% extends "main/base.html" %}
+{% load static %}
+{% block content %}
+    <table class="table table-hover table-bordered">
+        {% if field_names %}
+            <thead>
+                <tr>
+                    {% for name in field_names %}
+                        {% if name == "운영 여부" %}
+                        {% else %}
+                            <th scope="col">{{ name }}</th>
+                        {% endif %}
+                    {% endfor %}
+                </tr>
+            </thead>
+        {% endif %}
+        {% if branches %}
+            <tbody class="table-group-divider">
+                {% for object in object_list %}
+                    {% if object.is_opened == True %}
+                        <tr class="table-success">
+                    {% elif object.is_opened == False %}
+                        <tr class="table-danger">
+                    {% else %}
+                        <tr>
+                    {% endif %}
+                            <th scope="row">{{ object.srl }}</th>
+                            <td><a href="{% url 'branches:detail' srl=object.srl %}">{{ object.name }}</a></td>
+                            <td>{{ object.postcode }}</td>
+                            <td>{{ object.address1 }}</td>
+                            <td>{{ object.address2 }}</td>
+                            <td><a href="tel:{{ object.phone1 }}">{{ object.phone1 }}</a></td>
+                            <td><a href="tel:{{ object.phone2 }}">{{ object.phone2 }}</a></td>
+                        </tr>
+                {% endfor %}
+            </tbody>
+        {% endif %}
+    </table>
+{% endblock %}

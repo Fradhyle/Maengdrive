@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 {% extends "main/base.html" %}
 {% load static %}
 {% block content %}
@@ -6,43 +7,57 @@
         {{ form.non_field_errors }}
         
         <div class="row">
-            {{ form.name.errors }}
+            
             <label class="col-3 col-form-label text-nowrap" for="{{ form.name.id_for_label }}">{{ form.name.label }}</label>
             <div class="col">{{ form.name }}</div>
+            {{ form.name.errors }}
         </div>
         
         <div class="row">
-            {{ form.postcode.errors }}
             <label class="col-3 col-form-label text-nowrap" for="{{ form.postcode.id_for_label }}">{{ form.postcode.label }}</label>
             <div class="col">{{ form.postcode }}</div>
             <div class="col-auto text-nowrap">
                 <!-- Address Search Modal Button -->
                 <button class="btn btn-primary" data-bs-target="#address-search-modal" data-bs-toggle="modal" type="button" onclick="catchEnter()">주소 검색</button>
             </div>
+            {{ form.postcode.errors }}
         </div>
         
         <div class="row">
-            {{ form.address1.errors }}
             <label class="col-3 col-form-label text-nowrap" for="{{ form.address1.id_for_label }}">{{ form.address1.label }}</label>
             <div class="col">{{ form.address1 }}</div>
+            {{ form.address1.errors }}
         </div>
         
         <div class="row">
-            {{ form.address2.errors }}
             <label class="col-3 col-form-label text-nowrap" for="{{ form.address2.id_for_label }}">{{ form.address2.label }}</label>
             <div class="col">{{ form.address2 }}</div>
+            {{ form.address2.errors }}
+        </div>
+
+        <div class="row">
+            <div class="col d-flex justify-content-end">&#8251; 참고 항목(괄호 안의 주소)은 입력하지 않아도 됩니다.</div>
         </div>
         
         <div class="row">
-            {{ form.phone1.errors }}
             <label class="col-3 col-form-label text-nowrap" for="{{ form.phone1.id_for_label }}">{{ form.phone1.label }}</label>
             <div class="col">{{ form.phone1 }}</div>
+            {{ form.phone1.errors }}
         </div>
         
         <div class="row">
-            {{ form.phone2.errors }}
             <label class="col-3 col-form-label text-nowrap" for="{{ form.phone2.id_for_label }}">{{ form.phone2.label }}</label>
             <div class="col">{{ form.phone2 }}</div>
+            {{ form.phone2.errors }}
+        </div>
+
+        <div class="row">
+            <div class="col d-flex justify-content-end">
+                <p>
+                    &#8251; 전화번호는 &lsquo;전화번호 1&rsquo;부터 입력하세요.<br>
+                    둘 중 하나만 입력해도 됩니다.
+                </p>
+            </div>
         </div>
         
         <div class="row">

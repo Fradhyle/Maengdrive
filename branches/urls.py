@@ -20,7 +20,7 @@ from branches import views
 app_name = "branches"
 
 urlpatterns = [
-    path("", views.IndexView.as_view(), name="index"),
-    path("add/", views.AddBranchView.as_view(), name="branch-add"),
-    path("<int:srl>/", views.BranchDetailView.as_view(), name="branch-detail"),
+    path("", views.BranchListView.as_view(), name="list"),
+    path("add/", views.AddBranchView.as_view(), name="add"),
+    path("<int:srl>/", views.BranchDetailView.as_view(), name="detail"),
 ]

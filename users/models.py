@@ -1,76 +1,180 @@
-from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
+from django.contrib.auth.models import (
+    AbstractBaseUser,
+    BaseUserManager,
+    PermissionsMixin,
+)
+from django.core.validators import RegexValidator
 from django.db import models
+from django.urls import reverse
 from django.utils import timezone
 
+from branches.models import Branch
+
 # Create your models here.
+phone_validator = RegexValidator(
+    regex="\d{2,4}-?\d{3,4}(-?\d{4})?",
+    message="올바른 전화번호 형식이 아닙니다.",
+)
 
 
 class UserManager(BaseUserManager):
-    def create_user(self):
-        pass
+    def create_user(self, username, name, birthday, gender, phone, belong_to, **kwargs):
+        user = self.model(
+            username=username,
+            name=name,
+            birthday=birthday,
+            gender=gender,
+            phone=phone,
+            license_type=kwargs.get("license_type"),
+            plan_type=kwargs.get("plan_type"),
+            belong_to=Branch.objects.get(srl=belong_to),
+        )
+        user.set_password(kwargs.get("password"))
+        user.save(using=self._db)
 
-    def create_superuser(self):
-        pass
+        return user
+
+    def create_staff(
+        self, username, name, birthday, gender, phone, belong_to, **kwargs
+    ):
+        user = self.create_user(username, name, birthday, gender, phone, belong_to)
+        user.is_staff = True
+        user.save(using=self._db)
+
+        return user
+
+    def create_superuser(
+        self, username, name, birthday, gender, phone, belong_to, **kwargs
+    ):
+        user = self.create_user(username, name, birthday, gender, phone, belong_to)
+        user.is_staff = True
+        user.is_superuser = True
+        user.save(using=self._db)
+
+        return user
 
 
-class User(AbstractBaseUser):
-    GENDER_TYPES = [
+class User(AbstractBaseUser, PermissionsMixin):
+    GENDERS = [
         ("M", "남성"),
         ("F", "여성"),
     ]
     LICENSE_TYPES = [
-        ("", ""),
-        ("L1L", "1종 대형"),
-        ("L1G", "1종 보통"),
-        ("L1GA", "1종 보통 (자동)"),
-        ("L2G", "2종 보통"),
-        ("L2GA", "2종 보통 (자동)"),
+        (None, "미선택"),
+        ("1L", "1종 대형"),
+        ("1O", "1종 보통"),
+        ("1OA", "1종 보통 (자동)"),
+        ("2O", "2종 보통"),
+        ("2OA", "2종 보통 (자동)"),
         ("P", "장롱 면허"),
     ]
     PLAN_TYPES = [
-        ("", ""),
+        (None, "미선택"),
         ("T", "시간제"),
         ("G", "합격보장제"),
         ("P", "장롱 면허"),
     ]
-    srl = models.BigAutoField(primary_key=True, verbose_name="이용자 연번")
-    username = models.TextField(unique=True, verbose_name="이용자 아이디")
-    name = models.TextField(verbose_name="이름")
-    birthday = models.DateField(verbose_name="생년월일")
-    gender = models.TextField(verbose_name="성별", choices=GENDER_TYPES)
-    phone = models.TextField(verbose_name="전화번호")
-    license_type = models.TextField(
-        verbose_name="면허 종류", choices=LICENSE_TYPES, null=True)
-    plan_type = models.TextField(
-        verbose_name="요금제 유형", choices=PLAN_TYPES, null=True)
+    srl = models.BigAutoField(
+        primary_key=True,
+        verbose_name="연번",
+    )
+    username = models.TextField(
+        unique=True,
+        verbose_name="아이디",
+    )
+    name = models.TextField(
+        verbose_name="이름",
+    )
+    birthday = models.DateField(
+        verbose_name="생년월일",
+    )
+    gender = models.TextField(
+        verbose_name="성별",
+        choices=GENDERS,
+    )
+    phone = models.TextField(
+        verbose_name="전화번호",
+        validators=[
+            phone_validator,
+        ],
+    )
+    license_type = models.CharField(
+        max_length=3,
+        verbose_name="면허 종류",
+        choices=LICENSE_TYPES,
+        blank=True,
+        null=True,
+        default=None,
+    )
+    plan_type = models.CharField(
+        max_length=1,
+        verbose_name="요금제 유형",
+        choices=PLAN_TYPES,
+        blank=True,
+        null=True,
+        default=None,
+    )
     belong_to = models.ForeignKey(
         "branches.Branch",
-        to_field="srl",
         verbose_name="소속 지점",
         on_delete=models.DO_NOTHING,
     )
-    is_staff = models.BooleanField(default=False)
-    is_active = models.BooleanField(default=True)
+    is_active = models.BooleanField(
+        verbose_name="활성 상태",
+        default=True,
+    )
+    is_staff = models.BooleanField(
+        verbose_name="직원 여부",
+        default=False,
+    )
+    is_superuser = models.BooleanField(
+        verbose_name="최고관리자 여부",
+        default=False,
+    )
     date_joined = models.DateTimeField(default=timezone.now)
 
     USERNAME_FIELD = "username"
+
     REQUIRED_FIELDS = [
         "name",
         "birthday",
+        "gender",
         "phone",
-        "license_type",
-        "plan_type",
         "belong_to",
-        "is_staff",
-        "is_active",
-        "date_joined"
     ]
 
     class Meta:
         verbose_name = "이용자"
+        verbose_name_plural = "이용자"
 
-    def __str__(self):
-        name = self.name
-        birthday = self.birthday.strftime("%y%m%d")
-        gender = self.gender
-        return name + " (" + birthday + gender + ")"
+    def __str__(self) -> str:
+        if self.gender == "M":
+            gender_short = "남"
+        elif self.gender == "F":
+            gender_short = "여"
+
+        return (
+            self.name
+            + " ("
+            + self.birthday.strftime("%y%m%d")
+            + "/"
+            + gender_short
+            + ")"
+        )
+
+    # @property
+    # def is_active(self):
+    #     return self.is_active
+
+    # @property
+    # def is_staff(self):
+    #     return self.is_staff
+
+    # @property
+    # def is_superuser(self):
+    #     return self.is_superuser
+
+    objects = UserManager()
+
+    def get_absolute_url(self):
+        return reverse("users:detail", kwargs={"srl": self.srl})

@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+{% extends "main/base.html" %}
+{% load static %}
+{% block content %}
+    <table class="table">
+        <thead>
+            <tr>
+                <th colspan="2">지점 정보</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for field, value in branch_detail.items %}
+                <tr>
+                    {% if field != "연번" %}
+                        <th scope="row">{{ field }}</th>
+                        {% if field == "운영 여부" and value == True %}
+                            <td>개업</td>
+                        {% elif field == "운영 여부" and value == False %}
+                            <td>폐업</td>
+                        {% elif field == "전화번호 1" or field == "전화번호 2" %}
+                            <td><a href="tel:{{ value }}">{{ value }}</a></td>
+                        {% else %}
+                            <td>{{ value }}</td>
+                        {% endif %}
+                    {% endif %}
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <button type="button">편집</button>
+    <button type="button">운영 중단</button>
+    <button type="button">이전</button>
+{% endblock %}
