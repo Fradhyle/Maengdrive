@@ -162,18 +162,6 @@ class User(AbstractBaseUser, PermissionsMixin):
             + ")"
         )
 
-    # @property
-    # def is_active(self):
-    #     return self.is_active
-
-    # @property
-    # def is_staff(self):
-    #     return self.is_staff
-
-    # @property
-    # def is_superuser(self):
-    #     return self.is_superuser
-
     objects = UserManager()
 
     def get_absolute_url(self):

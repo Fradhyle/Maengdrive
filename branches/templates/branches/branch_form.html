@@ -2,12 +2,10 @@
 {% extends "main/base.html" %}
 {% load static %}
 {% block content %}
-    <form action="" method="POST" id="branchForm" class="container d-grid gap-3 justify-content-evenly align-items-center">
+    <form action="" method="POST" id="branch-form" class="container d-grid gap-3 justify-content-evenly align-items-center">
         {% csrf_token %}
-        {{ form.non_field_errors }}
-        
-        <div class="row">
-            
+        {{ form.non_field_errors }}        
+        <div class="row">            
             <label class="col-3 col-form-label text-nowrap" for="{{ form.name.id_for_label }}">{{ form.name.label }}</label>
             <div class="col">{{ form.name }}</div>
             {{ form.name.errors }}

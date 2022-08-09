@@ -1,64 +1,39 @@
 from django import forms
-from django.core.validators import RegexValidator
-from django.forms import CharField, ModelForm
+from django.forms import ModelForm
 
 from branches.models import Branch
 
-phone_validator = RegexValidator(
-    regex="\d{2,4}-?\d{3,4}(-?\d{4})?",
-    message="올바른 전화번호 형식이 아닙니다.",
-)
-
 
 class BranchForm(ModelForm):
-    def clean(self):
-        self.cleaned_data = super().clean()
-        self.cleaned_data["phone1"] = self.clean_phone1()
-        self.cleaned_data["phone2"] = self.clean_phone2()
+    def format_phone_number(self, field_name):
+        phone_number = self.cleaned_data.get(field_name)
+        phone_number = phone_number.replace("-", "")
+
+        if len(phone_number) == 0:
+            return phone_number
+        elif phone_number[0:2] == "02" and len(phone_number) == 9:
+            phone_number = [phone_number[0:2], phone_number[2:5], phone_number[5:]]
+            phone_number = "-".join(phone_number)
+        elif phone_number[0:2] == "02" and len(phone_number) == 10:
+            phone_number = [phone_number[0:2], phone_number[2:6], phone_number[6:]]
+            phone_number = "-".join(phone_number)
+        elif phone_number[0] != 0 and len(phone_number) == 8:
+            phone_number = [phone_number[0:4], phone_number[4:]]
+            phone_number = "-".join(phone_number)
+        elif len(phone_number) == 10:
+            phone_number = [phone_number[0:3], phone_number[3:6], phone_number[6:]]
+            phone_number = "-".join(phone_number)
+        elif len(phone_number) == 11:
+            phone_number = [phone_number[0:3], phone_number[3:7], phone_number[7:]]
+            phone_number = "-".join(phone_number)
+
+        return phone_number
 
     def clean_phone1(self):
-        phone = self.cleaned_data["phone1"]
-        phone = phone.replace("-", "")
-
-        if phone[0:2] == "02" and len(phone) == 9:
-            phone = [phone[0:2], phone[2:5], phone[5:]]
-            phone = "".join(phone)
-        elif phone[0:2] == "02" and len(phone) == 10:
-            phone = [phone[0:2], phone[2:6], phone[6:]]
-            phone = "".join(phone)
-        elif phone[0] != 0 and len(phone) == 8:
-            phone = [phone[0:4], phone[4:]]
-            phone = "".join(phone)
-        elif len(phone) == 10:
-            phone = [phone[0:3], phone[3:6], phone[6:]]
-            phone = "".join(phone)
-        elif len(phone) == 11:
-            phone = [phone[0:3], phone[3:7], phone[7:]]
-            phone = "".join(phone)
-
-        return phone
+        return self.format_phone_number("phone1")
 
     def clean_phone2(self):
-        phone = self.cleaned_data["phone2"]
-        phone = phone.replace("-", "")
-
-        if phone[0:2] == "02" and len(phone) == 9:
-            phone = [phone[0:2], phone[2:5], phone[5:]]
-            phone = "".join(phone)
-        elif phone[0:2] == "02" and len(phone) == 10:
-            phone = [phone[0:2], phone[2:6], phone[6:]]
-            phone = "".join(phone)
-        elif len(phone) == 8:
-            phone = [phone[0:4], phone[4:]]
-            phone = "".join(phone)
-        elif len(phone) == 10:
-            phone = [phone[0:3], phone[3:6], phone[6:]]
-            phone = "".join(phone)
-        elif len(phone) == 11:
-            phone = [phone[0:3], phone[3:7], phone[7:]]
-            phone = "".join(phone)
-
-        return phone
+        return self.format_phone_number("phone2")
 
     class Meta:
         model = Branch

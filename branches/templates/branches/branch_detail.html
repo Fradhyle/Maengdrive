@@ -29,5 +29,6 @@
     </table>
     <button type="button">편집</button>
     <button type="button">운영 중단</button>
-    <button type="button">이전</button>
+    <button type="button">삭제</button>
+    <button type="button" onclick="location.href='{{ request.META.HTTP_REFERER }}'">이전</button>
 {% endblock %}

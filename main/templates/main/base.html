@@ -40,8 +40,19 @@
                             <li class="nav-item">
                                 <a class="nav-link" href="{% url 'users:index' %}">이용자 관리</a>
                             </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="{% url 'schedules:index' %}">일정 관리</a>
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" id="schedules-dropdown" data-bs-toggle="dropdown" href="#" role="button" aria-expanded="false">일정 관리</a>
+                                <ul class="dropdown-menu" aria-labelledby="schedules-dropdown">
+                                    <li>
+                                        <a class="dropdown-item" href="{% url 'schedules:index' %}">일정 목록</a>
+                                    </li>
+                                    <li>
+                                        <a class="dropdown-item" href="">일정 추가</a>
+                                    </li>
+                                    <li>
+                                        <a class="dropdown-item" href="{% url 'schedules:add_timetable' %}">시간표 추가</a>
+                                    </li>
+                                </ul>
                             </li>
                         </ul>
                     </nav>

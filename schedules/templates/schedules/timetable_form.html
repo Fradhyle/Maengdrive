@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+{% extends "main/base.html" %}
+{% load static %}
+{% block content %}
+    <form action="" method="POST" id="timetable-form" class="container d-grid gap-3 justify-content-evenly align-items-center">
+        {% csrf_token %}
+        {{ form.non_field_errors }}
+        {% comment %} <div class="row">
+            <label class="col-3 col-form-label text-nowrap" for="{{ form.branch_choices.id_for_label }}">{{ form.branch_choices.label }}</label>
+            <div class="col">{{ form.branch_choices }}</div>
+            {{ form.branch_choices.errors }}
+        </div> {% endcomment %}
+
+        <div class="row">
+            <label class="col-3 col-form-label text-nowrap" for="{{ form.branch_srl.id_for_label }}">{{ form.branch_srl.label }}</label>
+            <div class="col">{{ form.branch_srl }}</div>
+            {{ form.branch_srl.errors }}
+        </div>
+        
+        <div class="row">
+            <label class="col-3 col-form-label text-nowrap" for="{{ form.period.id_for_label }}">{{ form.period.label }}</label>
+            <div class="col">{{ form.period }}</div>
+            {{ form.period.errors }}
+        </div>
+        
+        <div class="row">
+            <label class="col-3 col-form-label text-nowrap" for="{{ form.period_length.id_for_label }}">{{ form.period_length.label }}</label>
+            <div class="col">{{ form.period_length }}</div>
+            {{ form.period_length.errors }}
+        </div>
+        
+        <div class="row">
+            <label class="col-3 col-form-label text-nowrap" for="{{ form.is_holiday.id_for_label }}">{{ form.is_holiday.label }}</label>
+            <div class="col">
+                {% for choice in form.is_holiday %}
+                    <div class="form-check">
+                        {{ choice.tag }}
+                        <label class="form-check-label" for="{{ choice.id_for_label }}">{{ choice.choice_label }}</label>
+                    </div>
+                {% endfor %}
+            </div>
+            {{ form.is_holiday.errors }}
+        </div>
+        
+        <div class="row">
+            <label class="col-3 col-form-label text-nowrap" for="{{ form.start_time.id_for_label }}">{{ form.start_time.label }}</label>
+            <div class="col">{{ form.start_time }}</div>
+            {{ form.start_time.errors }}
+        </div>
+        
+        <div class="row">
+            <label class="col-3 col-form-label text-nowrap" for="{{ form.end_time.id_for_label }}">{{ form.end_time.label }}</label>
+            <div class="col">{{ form.end_time }}</div>
+            {{ form.end_time.errors }}
+        </div>
+        
+        <div class="row">
+            <div class="col d-flex justify-content-end">
+                <button class="btn btn-primary" type="submit">저장</button>
+            </div>
+        </div>
+    </form>
+{% endblock %}
