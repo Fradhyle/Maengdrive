@@ -19,8 +19,13 @@ class Branch(models.Model):
         max_length=5,
         verbose_name="우편번호",
     )
-    address1 = models.TextField(verbose_name="도로명 주소")
-    address2 = models.TextField(verbose_name="상세 주소", blank=True)
+    address1 = models.TextField(
+        verbose_name="도로명 주소",
+    )
+    address2 = models.TextField(
+        verbose_name="상세 주소",
+        blank=True,
+    )
     phone1 = models.CharField(
         max_length=13,
         validators=[

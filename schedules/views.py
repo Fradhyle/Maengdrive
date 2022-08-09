@@ -25,6 +25,11 @@ class AddTimetableView(CreateView):
     form_class = TimetableForm
     success_url = reverse_lazy("schedules:index")
 
+    def form_valid(self, form):
+        print(form.cleaned_data)
+
+        return super().form_valid(form)
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["page_title"] = "시간표 추가"

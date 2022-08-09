@@ -6,27 +6,20 @@ from schedules.models import Schedule, Timetable
 
 
 class TimetableForm(ModelForm):
-    def __init__(self, *args, **kwargs):
-        self.branches = Branch.objects.all()
-        super(TimetableForm, self).__init__(*args, **kwargs)
-        self.fields["branch_srl"].queryset = self.branches
-
-    # branch_choices = ModelChoiceField(
-    #     queryset=Branch.objects.all(),
-    #     required=True,
-    #     label="지점",
-    #     widget=forms.Select(
-    #         attrs={
-    #             "class": "form-select",
-    #             "placeholder": "지점을 선택하세요.",
-    #         },
-    #     ),
-    # )
+    branch_srl = ModelChoiceField(
+        queryset=Branch.objects.all(),
+        required=True,
+        label="지점",
+        widget=forms.Select(
+            attrs={
+                "class": "form-select",
+            },
+        ),
+    )
 
     class Meta:
         model = Timetable
         fields = (
-            # "branch_choices",
             "branch_srl",
             "period",
             "period_length",
@@ -34,20 +27,7 @@ class TimetableForm(ModelForm):
             "start_time",
             "end_time",
         )
-        labels = {
-            "branch_srl": "지점",
-            "period": "교시",
-            "period_length": "수업 시간",
-            "is_holiday": "휴일 여부",
-            "start_time": "시작 시간",
-            "end_time": "종료 시간",
-        }
         widgets = {
-            "branch_srl": forms.Select(
-                attrs={
-                    "class": "form-select",
-                },
-            ),
             "period": forms.NumberInput(
                 attrs={
                     "class": "form-control",
