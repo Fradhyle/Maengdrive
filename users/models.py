@@ -55,11 +55,11 @@ class UserManager(BaseUserManager):
 
 
 class User(AbstractBaseUser, PermissionsMixin):
-    GENDERS = [
+    GENDERS = (
         ("M", "남성"),
         ("F", "여성"),
-    ]
-    LICENSE_TYPES = [
+    )
+    LICENSE_TYPES = (
         (None, "미선택"),
         ("1L", "1종 대형"),
         ("1O", "1종 보통"),
@@ -67,13 +67,13 @@ class User(AbstractBaseUser, PermissionsMixin):
         ("2O", "2종 보통"),
         ("2OA", "2종 보통 (자동)"),
         ("P", "장롱 면허"),
-    ]
-    PLAN_TYPES = [
+    )
+    PLAN_TYPES = (
         (None, "미선택"),
         ("T", "시간제"),
         ("G", "합격보장제"),
         ("P", "장롱 면허"),
-    ]
+    )
     srl = models.BigAutoField(
         primary_key=True,
         verbose_name="연번",
@@ -94,9 +94,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     )
     phone = models.TextField(
         verbose_name="전화번호",
-        validators=[
-            phone_validator,
-        ],
+        validators=(phone_validator,),
     )
     license_type = models.CharField(
         max_length=3,
@@ -131,36 +129,32 @@ class User(AbstractBaseUser, PermissionsMixin):
         verbose_name="최고관리자 여부",
         default=False,
     )
-    date_joined = models.DateTimeField(default=timezone.now)
+    date_joined = models.DateTimeField(
+        verbose_name="가입일",
+        default=timezone.now,
+    )
 
     USERNAME_FIELD = "username"
 
-    REQUIRED_FIELDS = [
+    REQUIRED_FIELDS = (
         "name",
         "birthday",
         "gender",
         "phone",
         "belong_to",
-    ]
+    )
 
     class Meta:
         verbose_name = "이용자"
         verbose_name_plural = "이용자"
 
-    def __str__(self) -> str:
+    def __str__(self):
         if self.gender == "M":
             gender_short = "남"
         elif self.gender == "F":
             gender_short = "여"
 
-        return (
-            self.name
-            + " ("
-            + self.birthday.strftime("%y%m%d")
-            + "/"
-            + gender_short
-            + ")"
-        )
+        return f"{self.name} ({self.birthday.strftime('%y%m%d')}/{gender_short})"
 
     objects = UserManager()
 

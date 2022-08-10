@@ -1,13 +1,14 @@
+from django import forms
 from django.contrib import admin
 from django.contrib.admin import ModelAdmin
+from django.db import models
 
 from users.models import User
 
 
 # Register your models here.
 @admin.action(description="선택한 이용자를 비활성화")
-def deactivate_user(admin, request, queryset):
-    print(locals())
+def deactivate_user(queryset):
     queryset.update(is_active=False)
 
 
@@ -28,7 +29,7 @@ class UserModelAdmin(ModelAdmin):
         "date_joined",
     )
 
-    list_display_links = ["username"]
+    list_display_links = ("username",)
 
     list_editable = (
         "name",
@@ -52,6 +53,14 @@ class UserModelAdmin(ModelAdmin):
         "is_superuser",
     )
 
-    actions = [
-        deactivate_user,
-    ]
+    actions = (deactivate_user,)
+
+    formfield_overrides = {
+        models.TextField: {
+            "widget": forms.TextInput(
+                attrs={
+                    "size": "6",
+                },
+            )
+        },
+    }

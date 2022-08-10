@@ -35,6 +35,13 @@ class BranchForm(ModelForm):
     def clean_phone2(self):
         return self.format_phone_number("phone2")
 
+    def clean_name(self):
+        name = self.cleaned_data["name"]
+        if name.startswith(("개발", "테스트")) or name.endswith("점"):
+            return name
+        else:
+            return name + "점"
+
     class Meta:
         model = Branch
         fields = (

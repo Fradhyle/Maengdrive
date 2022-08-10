@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+{% extends "main/base.html" %}
+{% load static %}
+{% block content %}
+    <table class="table table-hover table-bordered">
+        {% if field_names %}
+            <thead>
+                <tr>
+                    {% for name in field_names %}
+                        <th scope="col">{{ name }}</th>
+                    {% endfor %}
+                </tr>
+            </thead>
+        {% endif %}
+        {% if timetables %}
+            <tbody class="table-group-divider">
+                {% for object in object_list %}
+                    {% if object.is_holiday == True %}
+                        <tr class="table-danger">
+                    {% elif object.is_holiday == False %}
+                        <tr class="table-primary">
+                    {% else %}
+                        <tr>
+                    {% endif %}
+                            <th scope="row">{{ object.srl }}</th>
+                            <td>{{ object.branch_srl }}</a></td>
+                            <td>{{ object.period }}</td>
+                            <td>{{ object.period_length }}</td>
+                            {% if object.is_holiday == True %}
+                                <td>예</td>
+                            {% elif object.is_holiday == False %}
+                                <td>아니오</td>
+                            {% else %}
+                                <td>확인 불가</td>
+                            {% endif %}
+                            <td>{{ object.start_time }}</a></td>
+                            <td>{{ object.end_time }}</a></td>
+                        </tr>
+                {% endfor %}
+            </tbody>
+        {% endif %}
+    </table>
+{% endblock %}

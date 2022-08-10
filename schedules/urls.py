@@ -1,7 +1,7 @@
-"""Pandamonium URL Configuration
+"""Maengdrive URL Configuration
 
 The `urlpatterns` list routes URLs to views. For more information please see:
-    https://docs.djangoproject.com/en/4.0/topics/http/urls/
+    https://docs.djangoproject.com/en/4.1/topics/http/urls/
 Examples:
 Function views
     1. Add an import:  from my_app import views
@@ -22,5 +22,4 @@ app_name = apps.get_app_config(__package__).name
 
 urlpatterns = [
     path("", views.IndexView.as_view(), name="index"),
-    path("t/add/", views.AddTimetableView.as_view(), name="add_timetable"),
 ]

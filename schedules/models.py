@@ -1,43 +1,8 @@
-import datetime
-
 from django.conf import settings
 from django.db import models
 
 
 # Create your models here.
-class Timetable(models.Model):
-    srl = models.BigAutoField(
-        primary_key=True,
-        verbose_name="연번",
-    )
-    branch_srl = models.ForeignKey(
-        "branches.Branch",
-        on_delete=models.CASCADE,
-        verbose_name="지점 연번",
-    )
-    period = models.DecimalField(
-        max_digits=2,
-        decimal_places=0,
-        verbose_name="교시",
-    )
-    period_length = models.DurationField(
-        default=datetime.timedelta(minutes=50),
-        verbose_name="수업 시간",
-    )
-    is_holiday = models.BooleanField(
-        default=False,
-        verbose_name="휴일 여부",
-    )
-    start_time = models.TimeField(
-        default=datetime.time(10, 00),
-        verbose_name="시작 시간",
-    )
-    end_time = models.TimeField(
-        default=datetime.time(23, 00),
-        verbose_name="종료 시간",
-    )
-
-
 class Schedule(models.Model):
     srl = models.BigAutoField(
         primary_key=True,
@@ -45,7 +10,7 @@ class Schedule(models.Model):
     )
     user_srl = models.ForeignKey(
         settings.AUTH_USER_MODEL,
-        on_delete=models.CASCADE,
+        on_delete=models.DO_NOTHING,
         verbose_name="이용자 연번",
     )
     branch_srl = models.ForeignKey(
@@ -59,3 +24,14 @@ class Schedule(models.Model):
     end_datetime = models.DateTimeField(
         verbose_name="종료 일시",
     )
+
+    class Meta:
+        verbose_name = "일정"
+        verbose_name_plural = "일정"
+
+    # def __str__(self):
+    #     branch_name = Branch.objects.get(srl=self.branch_srl)
+    #     return branch_name +  + self.period + "교시"
+
+    # def get_absolute_url(self):
+    #     return reverse("timetable:index", kwargs={"srl": self.srl})

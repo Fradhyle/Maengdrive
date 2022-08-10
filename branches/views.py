@@ -1,7 +1,6 @@
 from django.conf import settings
 from django.core.exceptions import FieldDoesNotExist
 from django.urls import reverse_lazy
-from django.views.generic.base import TemplateView
 from django.views.generic.detail import DetailView
 from django.views.generic.edit import CreateView
 from django.views.generic.list import ListView
@@ -27,26 +26,7 @@ class BranchListView(ListView):
             except AttributeError:
                 pass
         context["field_names"] = field_names
-        return context
 
-
-class IndexView(TemplateView):
-    template_name = "branches/index.html"
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context["name"] = "지점"
-        context["passed_list"] = range(5)
-        context["page_title"] = "지점 목록"
-        context["branches"] = Branch.objects.all().values()
-        field_names = []
-        fields = Branch._meta.get_fields()
-        for e in fields:
-            try:
-                field_names.append(e.verbose_name)
-            except AttributeError:
-                pass
-        context["field_names"] = field_names
         return context
 
 

@@ -16,11 +16,11 @@ Including another URLconf
 from django.apps import apps
 from django.urls import path
 
-from users import views
+from timetables import views
 
 app_name = apps.get_app_config(__package__).name
 
 urlpatterns = [
-    path("", views.IndexView.as_view(), name="index"),
-    path("<int:srl>", views.IndexView.as_view(), name="detail"),
+    path("", views.TimetableListView.as_view(), name="list"),
+    path("add/", views.AddTimetableView.as_view(), name="add"),
 ]
