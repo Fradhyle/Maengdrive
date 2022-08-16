@@ -1,8 +1,11 @@
 from django.contrib.auth.models import (
     AbstractBaseUser,
     BaseUserManager,
+    Group,
+    Permission,
     PermissionsMixin,
 )
+from django.contrib.contenttypes.models import ContentType
 from django.core.validators import RegexValidator
 from django.db import models
 from django.urls import reverse
@@ -18,35 +21,42 @@ phone_validator = RegexValidator(
 
 
 class UserManager(BaseUserManager):
-    def create_user(self, username, name, birthday, gender, phone, belong_to, **kwargs):
+    def create_user(
+        self, username, name, birthday, gender, phone, branch, password=None, **kwargs
+    ):
         user = self.model(
             username=username,
             name=name,
             birthday=birthday,
             gender=gender,
             phone=phone,
-            license_type=kwargs.get("license_type"),
-            plan_type=kwargs.get("plan_type"),
-            belong_to=Branch.objects.get(srl=belong_to),
+            license_type=kwargs["license_type"],
+            plan_type=kwargs["plan_type"],
+            branch=Branch.objects.get(srl=branch),
         )
-        user.set_password(kwargs.get("password"))
+
+        user.set_password(password)
         user.save(using=self._db)
 
         return user
 
     def create_staff(
-        self, username, name, birthday, gender, phone, belong_to, **kwargs
+        self, username, name, birthday, gender, phone, branch, password, **kwargs
     ):
-        user = self.create_user(username, name, birthday, gender, phone, belong_to)
+        user = self.create_user(
+            username, name, birthday, gender, phone, branch, password, kwargs
+        )
         user.is_staff = True
         user.save(using=self._db)
 
         return user
 
     def create_superuser(
-        self, username, name, birthday, gender, phone, belong_to, **kwargs
+        self, username, name, birthday, gender, phone, branch, password, **kwargs
     ):
-        user = self.create_user(username, name, birthday, gender, phone, belong_to)
+        user = self.create_user(
+            username, name, birthday, gender, phone, branch, password, kwargs
+        )
         user.is_staff = True
         user.is_superuser = True
         user.save(using=self._db)
@@ -55,6 +65,8 @@ class UserManager(BaseUserManager):
 
 
 class User(AbstractBaseUser, PermissionsMixin):
+    objects = UserManager()
+
     GENDERS = (
         ("M", "남성"),
         ("F", "여성"),
@@ -112,7 +124,7 @@ class User(AbstractBaseUser, PermissionsMixin):
         null=True,
         default=None,
     )
-    belong_to = models.ForeignKey(
+    branch = models.ForeignKey(
         "branches.Branch",
         verbose_name="소속 지점",
         on_delete=models.DO_NOTHING,
@@ -141,7 +153,7 @@ class User(AbstractBaseUser, PermissionsMixin):
         "birthday",
         "gender",
         "phone",
-        "belong_to",
+        "branch",
     )
 
     class Meta:
@@ -154,9 +166,29 @@ class User(AbstractBaseUser, PermissionsMixin):
         elif self.gender == "F":
             gender_short = "여"
 
-        return f"{self.name} ({self.birthday.strftime('%y%m%d')}/{gender_short})"
-
-    objects = UserManager()
+        return f"{self.name} ({self.branch}/{self.birthday.strftime('%y%m%d')}/{gender_short})"
 
     def get_absolute_url(self):
         return reverse("users:detail", kwargs={"srl": self.srl})
+
+
+class BranchViewPermission(Permission):
+    name = "지점 정보를 볼 수 있음"
+    content_type = ContentType(app_label="users", model="user")
+    codename = "can_view_branch"
+
+
+class MemberGroup(Group):
+    name = "회원"
+
+
+class StaffGroup(Group):
+    name = "직원"
+
+
+class ManagerGroup(Group):
+    name = "매니저"
+
+
+class SuperuserGroup(Group):
+    name = "최고 관리자"

@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+{% extends "main/base.html" %}
+{% load static %}
+{% block content %}
+    <form action="" method="POST" id="timetable-form" class="container d-grid gap-3 justify-content-evenly align-items-center">
+        {% csrf_token %}
+        {{ form.non_field_errors }}
+        <div class="row">
+            <label class="col-4 col-form-label text-nowrap" for="{{ form.branch.id_for_label }}">{{ form.branch.label }}</label>
+            <div class="col">{{ form.branch }}</div>
+            {{ form.branch.errors }}
+        </div>
+        
+        <div class="row">
+            <label class="col-4 col-form-label text-nowrap" for="{{ form.is_holiday.id_for_label }}">{{ form.is_holiday.label }}</label>
+            <div class="col">
+                {% for choice in form.is_holiday %}
+                    <div class="form-check">
+                        {{ choice.tag }}
+                        <label class="form-check-label" for="{{ choice.id_for_label }}">{{ choice.choice_label }}</label>
+                    </div>
+                {% endfor %}
+            </div>
+            {{ form.is_holiday.errors }}
+        </div>
+        
+        <div class="row">
+            <label class="col-4 col-form-label text-nowrap" for="{{ form.open_time.id_for_label }}">{{ form.open_time.label }}</label>
+            <div class="col">{{ form.open_time }}</div>
+            {{ form.open_time.errors }}
+        </div>
+        
+        <div class="row">
+            <label class="col-4 col-form-label text-nowrap" for="{{ form.close_time.id_for_label }}">{{ form.close_time.label }}</label>
+            <div class="col">{{ form.close_time }}</div>
+            {{ form.close_time.errors }}
+        </div>
+        
+        <div class="row">
+            <div class="col d-flex justify-content-end">
+                <button class="btn btn-primary" type="submit">저장</button>
+            </div>
+        </div>
+    </form>
+{% endblock %}

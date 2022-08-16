@@ -22,5 +22,7 @@ app_name = apps.get_app_config(__package__).name
 
 urlpatterns = [
     path("", views.TimetableListView.as_view(), name="list"),
-    path("add/", views.AddTimetableView.as_view(), name="add"),
+    path("add/", views.TimetableCreateView.as_view(), name="add"),
+    path("<int:branch>/", views.TimetableDetailView.as_view(), name="detail"),
+    path("<int:branch>/init/<str:is_holiday>", views.init_timetable, name="init"),
 ]

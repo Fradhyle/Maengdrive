@@ -1,27 +1,25 @@
 from django.contrib import admin
 from django.contrib.admin import ModelAdmin
 
-from timetables.models import Timetable
+from business_hours.models import BusinessHours
 
 
 # Register your models here.
-@admin.register(Timetable)
+@admin.register(BusinessHours)
 class TimetableModelAdmin(ModelAdmin):
     list_display = (
         "srl",
         "branch",
         "is_holiday",
-        "period",
-        "start_time",
-        "end_time",
+        "open_time",
+        "close_time",
     )
     list_display_links = ("srl",)
     list_editable = (
         "branch",
         "is_holiday",
-        "period",
-        "start_time",
-        "end_time",
+        "open_time",
+        "close_time",
     )
     list_filter = (
         "branch",

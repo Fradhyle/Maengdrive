@@ -21,6 +21,6 @@ from users import views
 app_name = apps.get_app_config(__package__).name
 
 urlpatterns = [
-    path("", views.IndexView.as_view(), name="index"),
+    path("", views.UserListView.as_view(), name="list"),
     path("<int:srl>", views.IndexView.as_view(), name="detail"),
 ]

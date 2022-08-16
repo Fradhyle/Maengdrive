@@ -11,6 +11,24 @@
             {{ form.name.errors }}
         </div>
         
+        <div class="row">            
+            <label class="col-3 col-form-label text-nowrap" for="{{ form.open_time.id_for_label }}">{{ form.open_time.label }}</label>
+            <div class="col">{{ form.open_time }}</div>
+            {{ form.open_time.errors }}
+        </div>
+        
+        <div class="row">            
+            <label class="col-3 col-form-label text-nowrap" for="{{ form.close_time.id_for_label }}">{{ form.close_time.label }}</label>
+            <div class="col">{{ form.close_time }}</div>
+            {{ form.close_time.errors }}
+        </div>
+
+        <div class="row">            
+            <label class="col-3 col-form-label text-nowrap" for="{{ form.equipment_count.id_for_label }}">{{ form.equipment_count.label }}</label>
+            <div class="col">{{ form.equipment_count }}</div>
+            {{ form.equipment_count.errors }}
+        </div>
+        
         <div class="row">
             <label class="col-3 col-form-label text-nowrap" for="{{ form.postcode.id_for_label }}">{{ form.postcode.label }}</label>
             <div class="col">{{ form.postcode }}</div>

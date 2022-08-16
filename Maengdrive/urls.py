@@ -20,6 +20,7 @@ urlpatterns = [
     path("admin/", admin.site.urls),
     path("", include("main.urls")),
     path("b/", include("branches.urls")),
+    path("h/", include("business_hours.urls")),
     path("s/", include("schedules.urls")),
     path("t/", include("timetables.urls")),
     path("u/", include("users.urls")),

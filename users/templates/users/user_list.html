@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+{% extends "main/base.html" %}
+{% load static %}
+{% block content %}
+    <table class="table table-hover table-bordered">
+        {% if verbose_names %}
+            <thead>
+                <tr>
+                    <th scope="col">{{ verbose_names.srl }}</th>
+                    <th scope="col">{{ verbose_names.username }}</th>
+                    <th scope="col">{{ verbose_names.name }}</th>
+                    <th scope="col">{{ verbose_names.birthday }}</th>
+                    <th scope="col">{{ verbose_names.gender }}</th>
+                    <th scope="col">{{ verbose_names.phone }}</th>
+                    <th scope="col">{{ verbose_names.license_type }}</th>
+                    <th scope="col">{{ verbose_names.plan_type }}</th>
+                    <th scope="col">{{ verbose_names.branch }}</th>
+                    <th scope="col">{{ verbose_names.is_staff }}</th>
+                    <th scope="col">{{ verbose_names.is_superuser }}</th>
+                    <th scope="col">{{ verbose_names.date_joined }}</th>
+                </tr>
+            </thead>
+        {% endif %}
+        {% if object_list %}
+            <tbody class="table-group-divider">
+                {% for object in object_list %}
+                    {% if object.is_active == False %}
+                        <tr class="table-danger">
+                    {% elif object.is_active == True %}
+                        <tr class="table-success">
+                    {% else %}
+                        <tr class="table-warning">
+                    {% endif %}
+                            <th scope="row">{{ object.srl }}</th>
+                            <td>{{ object.username }}</td>
+                            <td>{{ object.name }}</td>
+                            <td>{{ object.birthday }}</td>
+                            {% if object.gender == "F" %}
+                                <td>여</td>
+                            {% elif object.gender == "M" %}
+                                <td>남</td>
+                            {% else %}
+                                <td>확인 불가</td>
+                            {% endif %}
+                            <td>{{ object.phone }}</td>
+                            <td>{{ object.license_type }}</td>
+                            <td>{{ object.plan_type }}</td>
+                            <td>{{ object.branch }}</td>
+                            {% if object.is_staff == False %}
+                                <td>부</td>
+                            {% elif object.is_staff == True %}
+                                <td>여</td>
+                            {% else %}
+                                <td>확인 불가</td>
+                            {% endif %}
+                            {% if object.is_superuser == False %}
+                                <td>부</td>
+                            {% elif object.is_superuser == True %}
+                                <td>여</td>
+                            {% else %}
+                                <td>확인 불가</td>
+                            {% endif %}
+                            <td>{{ object.date_joined }}</td>
+                        </tr>
+                {% endfor %}
+            </tbody>
+        {% endif %}
+    </table>
+    <button type="button" onclick="location.href='{% url 'timetables:add' %}'">추가</button>
+    <button type="button" onclick="location.href='{{ request.META.HTTP_REFERER }}'">이전</button>
+{% endblock %}

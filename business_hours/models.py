@@ -1,3 +1,5 @@
+import datetime
+
 from django.db import models
 from django.urls import reverse
 
@@ -5,7 +7,7 @@ from branches.models import Branch
 
 
 # Create your models here.
-class Timetable(models.Model):
+class BusinessHours(models.Model):
     srl = models.BigAutoField(
         primary_key=True,
         verbose_name="연번",
@@ -18,30 +20,26 @@ class Timetable(models.Model):
     is_holiday = models.BooleanField(
         verbose_name="휴일 여부",
     )
-    period = models.DecimalField(
-        max_digits=2,
-        decimal_places=0,
-        verbose_name="교시",
+    open_time = models.TimeField(
+        verbose_name="개점 시간",
+        default=datetime.time(9, 0),
     )
-    start_time = models.TimeField(
-        verbose_name="시작 시간",
-    )
-    end_time = models.TimeField(
-        verbose_name="종료 시간",
+    close_time = models.TimeField(
+        verbose_name="폐점 시간",
+        default=datetime.time(23, 0),
     )
 
     class Meta:
-        verbose_name = "시간표"
-        verbose_name_plural = "시간표"
+        verbose_name = "영업 시간"
+        verbose_name_plural = "영업 시간"
         ordering = [
             "branch",
             "is_holiday",
-            "period",
+            "open_time",
         ]
         unique_together = [
             "branch",
             "is_holiday",
-            "period",
         ]
 
     def __str__(self):
@@ -51,7 +49,7 @@ class Timetable(models.Model):
         else:
             holiday = "평일"
 
-        return f"{branch_name} {holiday} {self.period}교시"
+        return f"{branch_name} {holiday} {self.open_time} ~ {self.close_time}"
 
     def get_absolute_url(self):
-        return reverse("timetables:detail", kwargs={"branch": self.branch.srl})
+        return reverse("business_hours:detail", kwargs={"branch": self.branch.srl})

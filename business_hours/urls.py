@@ -16,11 +16,12 @@ Including another URLconf
 from django.apps import apps
 from django.urls import path
 
-from schedules import views
+from business_hours import views
 
 app_name = apps.get_app_config(__package__).name
 
 urlpatterns = [
-    path("", views.IndexView.as_view(), name="index"),
-    path("add/", views.AddScheduleView.as_view(), name="add"),
+    path("", views.BusinessHoursListView.as_view(), name="list"),
+    path("add/", views.BusinessHoursCreateView.as_view(), name="add"),
+    path("<int:branch>", views.BusinessHoursDetailView.as_view(), name="detail"),
 ]

@@ -3,4 +3,12 @@
 {% load static %}
 {% block content %}
 {{ form.as_table }}
+<input list="user-list" id="ice-cream-choice" name="ice-cream-choice" />
+{% if users %}
+<datalist id="user-list">
+    {% for user in users %}
+    <option value="{{ user }}">
+    {% endfor %}
+</datalist>
+{% endif %}
 {% endblock %}

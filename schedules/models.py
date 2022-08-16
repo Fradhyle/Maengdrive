@@ -8,15 +8,15 @@ class Schedule(models.Model):
         primary_key=True,
         verbose_name="연번",
     )
-    user_srl = models.ForeignKey(
+    user = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         on_delete=models.DO_NOTHING,
-        verbose_name="이용자 연번",
+        verbose_name="이용자",
     )
-    branch_srl = models.ForeignKey(
+    branch = models.ForeignKey(
         "branches.Branch",
         on_delete=models.DO_NOTHING,
-        verbose_name="지점 연번",
+        verbose_name="지점",
     )
     start_datetime = models.DateTimeField(
         verbose_name="시작 일시",

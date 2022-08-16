@@ -13,9 +13,9 @@
                 <tr>
                     {% if field != "연번" %}
                         <th scope="row">{{ field }}</th>
-                        {% if field == "폐업 여부" and value == False %}
+                        {% if field == "운영 여부" and value == True %}
                             <td>개업</td>
-                        {% elif field == "폐업 여부" and value == True %}
+                        {% elif field == "운영 여부" and value == False %}
                             <td>폐업</td>
                         {% elif field == "전화번호 1" or field == "전화번호 2" %}
                             <td><a href="tel:{{ value }}">{{ value }}</a></td>

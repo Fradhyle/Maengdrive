@@ -46,6 +46,7 @@ class BranchForm(ModelForm):
         model = Branch
         fields = (
             "name",
+            "equipment_count",
             "postcode",
             "address1",
             "address2",
@@ -56,7 +57,13 @@ class BranchForm(ModelForm):
             "name": forms.TextInput(
                 attrs={
                     "class": "form-control",
-                    "placeholder": "'점'을 포함한 지점명을 입력하세요.",
+                    "placeholder": "지점명을 입력하세요.",
+                }
+            ),
+            "equipment_count": forms.NumberInput(
+                attrs={
+                    "class": "form-control",
+                    "placeholder": "장비 대수를 입력하세요.",
                 }
             ),
             "postcode": forms.NumberInput(

@@ -1,5 +1,8 @@
+import datetime
+
 from django.conf import settings
 from django.core.exceptions import FieldDoesNotExist
+from django.db.models.fields.reverse_related import ManyToOneRel
 from django.urls import reverse_lazy
 from django.views.generic.detail import DetailView
 from django.views.generic.edit import CreateView
@@ -14,18 +17,19 @@ class BranchListView(ListView):
     model = Branch
     paginate_by = 10
 
+    def get_verbose_names(self):
+        verbose_names = {}
+        fields = self.model._meta.get_fields()
+        for field in fields:
+            if type(field) != ManyToOneRel:
+                verbose_names[field.name] = field.verbose_name
+
+        return verbose_names
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["page_title"] = "지점 목록"
-        context["branches"] = Branch.objects.all().values()
-        field_names = []
-        fields = Branch._meta.get_fields()
-        for e in fields:
-            try:
-                field_names.append(e.verbose_name)
-            except AttributeError:
-                pass
-        context["field_names"] = field_names
+        context["verbose_names"] = self.get_verbose_names()
 
         return context
 
@@ -38,6 +42,7 @@ class AddBranchView(CreateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["page_title"] = "지점 추가"
+        # !IMPORTANT: Please add juso.go.kr API Key if not using settings.json
         context["confmKey"] = settings.SETTINGS["confmKey"]
 
         return context
@@ -47,22 +52,19 @@ class BranchDetailView(DetailView):
     model = Branch
 
     def get_queryset(self):
-        queryset = self.model.objects.all()
         if "srl" in self.kwargs.keys():
-            queryset = queryset.filter(srl=self.kwargs.get("srl"))
-            return queryset
+            return self.model.objects.filter(srl=self.kwargs.get("srl"))
         else:
-            return queryset
+            return self.model.objects.all()
 
     def get_object(self, queryset=None):
         try:
             if len(queryset) == 1:
-                object = queryset.get()
-                return object
+                return queryset.get()
             else:
-                return self.model.objects.get(srl=self.kwargs.get("srl"))
+                return self.model.objects.filter(srl=self.kwargs.get("srl"))
         except TypeError:
-            return self.model.objects.get(srl=self.kwargs.get("srl"))
+            return self.model.objects.filter(srl=self.kwargs.get("srl"))
 
     def clean_object(self, object):
         new_object = {}

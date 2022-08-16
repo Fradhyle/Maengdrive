@@ -3,30 +3,30 @@
 {% load static %}
 {% block content %}
     <table class="table table-hover table-bordered">
-        {% if field_names %}
+        {% if verbose_names %}
             <thead>
                 <tr>
-                    {% for name in field_names %}
-                        {% if name == "운영 여부" %}
-                        {% else %}
-                            <th scope="col">{{ name }}</th>
+                    {% for name in verbose_names.values %}
+                        {% if name != "폐업 여부" %}
+                            <th scope="col">{{ name }}</th>                            
                         {% endif %}
                     {% endfor %}
                 </tr>
             </thead>
         {% endif %}
-        {% if branches %}
+        {% if object_list %}
             <tbody class="table-group-divider">
                 {% for object in object_list %}
-                    {% if object.is_opened == True %}
+                    {% if object.closure == False %}
                         <tr class="table-success">
-                    {% elif object.is_opened == False %}
+                    {% elif object.closure == True %}
                         <tr class="table-danger">
                     {% else %}
-                        <tr>
+                        <tr class="table-warning">
                     {% endif %}
                             <th scope="row">{{ object.srl }}</th>
                             <td><a href="{% url 'branches:detail' srl=object.srl %}">{{ object.name }}</a></td>
+                            <td>{{ object.equipment_count }}</td>
                             <td>{{ object.postcode }}</td>
                             <td>{{ object.address1 }}</td>
                             <td>{{ object.address2 }}</td>

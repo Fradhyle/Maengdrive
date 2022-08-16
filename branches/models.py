@@ -1,3 +1,5 @@
+import datetime
+
 from django.core.validators import RegexValidator
 from django.db import models
 from django.urls import reverse
@@ -14,7 +16,16 @@ class Branch(models.Model):
         primary_key=True,
         verbose_name="연번",
     )
-    name = models.TextField(verbose_name="지점명")
+    name = models.TextField(
+        verbose_name="지점명",
+        unique=True,
+    )
+    equipment_count = models.DecimalField(
+        max_digits=2,
+        decimal_places=0,
+        verbose_name="장비 대수",
+        default=5,
+    )
     postcode = models.CharField(
         max_length=5,
         verbose_name="우편번호",
@@ -41,9 +52,9 @@ class Branch(models.Model):
         verbose_name="전화번호 2",
         blank=True,
     )
-    is_opened = models.BooleanField(
-        default=True,
-        verbose_name="운영 여부",
+    closure = models.BooleanField(
+        default=False,
+        verbose_name="폐업 여부",
     )
 
     class Meta:
