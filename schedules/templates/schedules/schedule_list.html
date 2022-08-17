@@ -2,10 +2,24 @@
 {% extends "main/base.html" %}
 {% load static %}
 {% block content %}
-<table class="table">
-    <thead>
-    </thead>
-    <tbody>
-    </tbody>
-</table>
+    <table class="table">
+        <thead>
+            <tr>
+                {% for name in verbose_names.values %}
+                    <th scope="col">{{ name }}</th>
+                {% endfor %}
+            </tr>
+        </thead>
+        <tbody>
+            {% for object in object_list %}
+                <tr>
+                    <td>{{ object.srl }}</td>
+                    <td>{{ object.user }}</td>
+                    <td>{{ object.branch }}</td>
+                    <td>{{ object.start_datetime }}</td>
+                    <td>{{ object.end_datetime }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
 {% endblock %}

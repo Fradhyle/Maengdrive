@@ -2,13 +2,45 @@
 {% extends "main/base.html" %}
 {% load static %}
 {% block content %}
-{{ form.as_table }}
-<input list="user-list" id="ice-cream-choice" name="ice-cream-choice" />
-{% if users %}
-<datalist id="user-list">
-    {% for user in users %}
-    <option value="{{ user }}">
-    {% endfor %}
-</datalist>
-{% endif %}
+    <form action="" method="POST" id="timetable-form" class="container d-grid gap-3 justify-content-evenly align-items-center">
+        {% csrf_token %}
+        {{ form.non_field_errors }}
+        <div class="row">
+            <label class="col-3 col-form-label text-nowrap" for="{{ form.user.id_for_label }}">{{ form.user.label }}</label>
+            <div class="col">{{ form.user }}</div>
+            {{ form.user.errors }}
+        </div>
+        
+        {% if user_list %}
+            <datalist id="user-list">
+                {% for user in user_list %}
+                    <option value="{{ user.srl }}" label="{{ user }}">
+                {% endfor %}
+            </datalist>
+        {% endif %}
+        
+        <div class="row">
+            <label class="col-3 col-form-label text-nowrap" for="{{ form.branch.id_for_label }}">{{ form.branch.label }}</label>
+            <div class="col">{{ form.branch }}</div>
+            {{ form.branch.errors }}
+        </div>
+        
+        <div class="row">
+            <label class="col-3 col-form-label text-nowrap" for="{{ form.start_datetime.id_for_label }}">{{ form.start_datetime.label }}</label>
+            <div class="col">{{ form.start_datetime }}</div>
+            {{ form.start_datetime.errors }}
+        </div>
+        
+        <div class="row">
+            <label class="col-3 col-form-label text-nowrap" for="{{ form.end_datetime.id_for_label }}">{{ form.end_datetime.label }}</label>
+            <div class="col">{{ form.end_datetime }}</div>
+            {{ form.end_datetime.errors }}
+        </div>
+        
+        <div class="row">
+            <div class="col d-flex justify-content-end">
+                <button class="btn btn-primary" type="submit">저장</button>
+            </div>
+        </div>
+    </form>
 {% endblock %}

@@ -75,10 +75,10 @@
                                 <a class="nav-link dropdown-toggle" id="schedules-dropdown" data-bs-toggle="dropdown" href="#" role="button" aria-expanded="false"><svg class="bi pe-none" width="16" height="16" tabindex="-1" aria-disabled="true"><use href="#calendar"></use></svg>일정 관리</a>
                                 <ul class="dropdown-menu" aria-labelledby="schedules-dropdown">
                                     <li>
-                                        <a class="dropdown-item" href="{% url 'schedules:index' %}">일정 목록</a>
+                                        <a class="dropdown-item" href="{% url 'schedules:list' %}">일정 목록</a>
                                     </li>
                                     <li>
-                                        <a class="dropdown-item" href="#">일정 추가</a>
+                                        <a class="dropdown-item" href="{% url 'schedules:add' %}">일정 추가</a>
                                     </li>
                                 </ul>
                             </li>

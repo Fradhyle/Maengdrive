@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 {% extends "main/base.html" %}
 {% load static %}
+{% load get_attr %}
 {% block content %}
     <table class="table">
         <thead>
@@ -9,26 +10,30 @@
             </tr>
         </thead>
         <tbody>
-            {% for field, value in branch_detail.items %}
+            {% for key, value in verbose_names.items %}
                 <tr>
-                    {% if field != "연번" %}
-                        <th scope="row">{{ field }}</th>
-                        {% if field == "폐업 여부" and value == False %}
+                    <th scope="row">{{ value }}</th>
+                    {% if key == "closure" %}
+                        {% if object|get_attr:key == False %}
                             <td>개업</td>
-                        {% elif field == "폐업 여부" and value == True %}
+                        {% elif object|get_attr:key == True %}
                             <td>폐업</td>
-                        {% elif field == "전화번호 1" or field == "전화번호 2" %}
-                            <td><a href="tel:{{ value }}">{{ value }}</a></td>
                         {% else %}
-                            <td>{{ value }}</td>
+                            <td>확인 불가</td>
                         {% endif %}
+                    {% else %}
+                        <td>{{ object|get_attr:key }}</td>
                     {% endif %}
                 </tr>
             {% endfor %}
         </tbody>
     </table>
-    <button type="button">편집</button>
-    <button type="button">운영 중단</button>
-    <button type="button">삭제</button>
-    <button type="button" onclick="location.href='{{ request.META.HTTP_REFERER }}'">이전</button>
+    <button type="button" class="btn btn-primary">편집</button>
+    {% if object|get_attr:"closure" == False %}
+        <button type="button" class="btn btn-danger" onclick="location.href='{% url 'branches:shutdown' srl=object|get_attr:"srl" %}'">폐업</button>
+    {% else %}
+        <button type="button" class="btn btn-primary" onclick="location.href='{% url 'branches:reopen' srl=object|get_attr:"srl" %}'">재개업</button>
+    {% endif %}    
+    <button type="button" class="btn btn-danger">삭제</button>
+    <button type="button" class="btn btn-primary" onclick="location.href='{% url 'branches:list' %}'">지점 목록</button>
 {% endblock %}

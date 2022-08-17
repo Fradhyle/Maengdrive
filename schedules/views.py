@@ -1,4 +1,5 @@
 from django.apps import apps
+from django.db.models.fields.reverse_related import ManyToOneRel
 from django.urls import reverse_lazy
 from django.views.generic.base import TemplateView
 from django.views.generic.edit import CreateView
@@ -20,18 +21,35 @@ class IndexView(TemplateView):
         return context
 
 
-class ScheduleDayView(ListView):
-    pass
-
-
-class AddScheduleView(CreateView):
+class ScheduleListView(ListView):
     model = Schedule
-    form_class = ScheduleForm
-    success_url = reverse_lazy("schedules:index")
+    paginate_by = 10
+
+    def get_verbose_names(self):
+        verbose_names = {}
+        fields = self.model._meta.get_fields()
+        for field in fields:
+            if type(field) != ManyToOneRel:
+                verbose_names[field.name] = field.verbose_name
+
+        return verbose_names
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["users"] = User.objects.all()
+        context["page_title"] = "일정 목록"
+        context["verbose_names"] = self.get_verbose_names()
+
+        return context
+
+
+class ScheduleCreateView(CreateView):
+    model = Schedule
+    form_class = ScheduleForm
+    success_url = reverse_lazy("schedules:list")
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
         context["page_title"] = "일정 추가"
+        context["user_list"] = User.objects.all()
 
         return context

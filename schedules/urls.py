@@ -21,6 +21,6 @@ from schedules import views
 app_name = apps.get_app_config(__package__).name
 
 urlpatterns = [
-    path("", views.IndexView.as_view(), name="index"),
-    path("add/", views.AddScheduleView.as_view(), name="add"),
+    path("", views.ScheduleListView.as_view(), name="list"),
+    path("add/", views.ScheduleCreateView.as_view(), name="add"),
 ]

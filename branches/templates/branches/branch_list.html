@@ -18,20 +18,20 @@
             <tbody class="table-group-divider">
                 {% for object in object_list %}
                     {% if object.closure == False %}
-                        <tr class="table-success">
+                        <tr class="table-success" onclick="location.href='{% url 'branches:detail' srl=object.srl %}'">
                     {% elif object.closure == True %}
-                        <tr class="table-danger">
+                        <tr class="table-danger" onclick="location.href='{% url 'branches:detail' srl=object.srl %}'">
                     {% else %}
-                        <tr class="table-warning">
+                        <tr class="table-warning" onclick="location.href='{% url 'branches:detail' srl=object.srl %}'">
                     {% endif %}
                             <th scope="row">{{ object.srl }}</th>
-                            <td><a href="{% url 'branches:detail' srl=object.srl %}">{{ object.name }}</a></td>
+                            <td>{{ object.name }}</td>
                             <td>{{ object.equipment_count }}</td>
                             <td>{{ object.postcode }}</td>
                             <td>{{ object.address1 }}</td>
                             <td>{{ object.address2 }}</td>
-                            <td><a href="tel:{{ object.phone1 }}">{{ object.phone1 }}</a></td>
-                            <td><a href="tel:{{ object.phone2 }}">{{ object.phone2 }}</a></td>
+                            <td>{{ object.phone1 }}</td>
+                            <td>{{ object.phone2 }}</td>
                         </tr>
                 {% endfor %}
             </tbody>

@@ -24,4 +24,6 @@ urlpatterns = [
     path("", views.BranchListView.as_view(), name="list"),
     path("add/", views.AddBranchView.as_view(), name="add"),
     path("<int:srl>/", views.BranchDetailView.as_view(), name="detail"),
+    path("<int:srl>/shutdown", views.branch_shutdown, name="shutdown"),
+    path("<int:srl>/reopen", views.branch_reopen, name="reopen"),
 ]
