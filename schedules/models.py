@@ -28,6 +28,10 @@ class Schedule(models.Model):
     class Meta:
         verbose_name = "일정"
         verbose_name_plural = "일정"
+        ordering = [
+            "branch",
+            "start_datetime",
+        ]
 
     # def __str__(self):
     #     branch_name = Branch.objects.get(srl=self.branch_srl)

@@ -60,7 +60,9 @@ class Branch(models.Model):
     class Meta:
         verbose_name = "지점"
         verbose_name_plural = "지점"
-        ordering = ["srl"]
+        ordering = [
+            "srl",
+        ]
 
     def __str__(self):
         return self.name

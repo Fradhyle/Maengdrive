@@ -7,9 +7,7 @@
             <thead>
                 <tr>
                     {% for name in verbose_names.values %}
-                        {% if name != "휴일 여부" %}
-                            <th scope="col">{{ name }}</th>
-                        {% endif %}
+                        <th scope="col">{{ name }}</th>
                     {% endfor %}
                 </tr>
             </thead>
@@ -24,8 +22,7 @@
                     {% else %}
                         <tr class="table-warning">
                     {% endif %}
-                            <th scope="row">{{ object.srl }}</th>
-                            <td><a href="{% url 'timetables:detail' branch=object.branch.srl %}">{{ object.branch }}</a></td>
+                            <th scope="row"><a href="{% url 'timetables:detail' branch=object.branch.srl %}">{{ object.branch }}</a></th>
                             <td>{{ object.period }}</td>
                             <td>{{ object.start_time }}</td>
                             <td>{{ object.end_time }}</td>
@@ -34,6 +31,59 @@
             </tbody>
         {% endif %}
     </table>
-    <button type="button" onclick="location.href='{% url 'timetables:add' %}'">추가</button>
-    <button type="button" onclick="location.href='{{ request.META.HTTP_REFERER }}'">이전</button>
+
+    <div class="container d-grid">
+        <div class="row">
+            <div class="col">
+                <button type="button" class="btn btn-primary" onclick="location.href='{% url 'timetables:add' %}'">추가</button>
+                <button type="button" class="btn btn-primary" onclick="location.href='{{ request.META.HTTP_REFERER }}'">이전</button>
+            </div>
+            <div class="col">
+                <span class="current">
+                    {{ page_obj.paginator.num_pages }}쪽 중 {{ page_obj.number }}쪽
+                </span>
+            </div>
+            <div class="col">
+                <nav aria-label="페이지">
+                    <ul class="pagination">
+                        <li class="page-item {% if page_obj.has_previous == False %}disabled{% endif %}">
+                            <a class="page-link" href="?page=1">처음</a>
+                        </li>
+                        <li class="page-item {% if page_obj.has_previous == False %}disabled{% endif %}">
+                            <a class="page-link" href="{% if page_obj.has_previous %}?page={{ page_obj.previous_page_number }}{% else %}#{% endif %}">이전</a>
+                        </li>
+                        {% if page_obj.has_previous and page_obj.previous_page_number|add:"-1" > 0 %}
+                            <li class="page-item">
+                                <a class="page-link" href="?page={{ page_obj.previous_page_number|add:"-1" }}">{{ page_obj.previous_page_number|add:"-1" }}</a>
+                            </li>
+                        {% endif %}
+                        {% if page_obj.has_previous %}
+                            <li class="page-item">
+                                <a class="page-link" href="?page={{ page_obj.previous_page_number }}">{{ page_obj.previous_page_number }}</a>
+                            </li>
+                        {% endif %}
+                        <li class="page-item active" aria-current="page">
+                            <a class="page-link" href="?page={{ page_obj.number }}">{{ page_obj.number }}</a>
+                        </li>
+                        {% if page_obj.has_next %}
+                            <li class="page-item">
+                                <a class="page-link" href="?page={{ page_obj.next_page_number }}">{{ page_obj.next_page_number }}</a>
+                            </li>
+                        {% endif %}
+                        {% if page_obj.has_next and page_obj.next_page_number|add:"1" <= page_obj.paginator.num_pages %}
+                            <li class="page-item">
+                                <a class="page-link" href="?page={{ page_obj.next_page_number|add:"1" }}">{{ page_obj.next_page_number|add:"1" }}</a>
+                            </li>
+                        {% endif %}
+                        <li class="page-item {% if page_obj.has_next == False %}disabled{% endif %}">
+                            <a class="page-link" href="{% if page_obj.has_next %}?page={{ page_obj.next_page_number }}{% else %}#{% endif %}">다음</a>
+                        </li>
+                        <li class="page-item {% if page_obj.has_next == False %}disabled{% endif %}">
+                            <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}">끝</a>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </div>
 {% endblock %}

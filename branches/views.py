@@ -56,7 +56,7 @@ class BranchListView(ListView):
         return context
 
 
-class AddBranchView(CreateView):
+class BranchCreateView(CreateView):
     model = Branch
     form_class = BranchForm
     success_url = reverse_lazy("branches:list")

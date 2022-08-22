@@ -1,8 +1,5 @@
 import calendar
-import json
-import math
 
-import requests
 from django.conf import settings
 from django.utils import timezone
 from django.views.generic.base import TemplateResponseMixin, TemplateView

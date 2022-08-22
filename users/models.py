@@ -1,11 +1,4 @@
-from django.contrib.auth.models import (
-    AbstractBaseUser,
-    BaseUserManager,
-    Group,
-    Permission,
-    PermissionsMixin,
-)
-from django.contrib.contenttypes.models import ContentType
+from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, Group
 from django.core.validators import RegexValidator
 from django.db import models
 from django.urls import reverse
@@ -64,7 +57,7 @@ class UserManager(BaseUserManager):
         return user
 
 
-class User(AbstractBaseUser, PermissionsMixin):
+class User(AbstractBaseUser):
     objects = UserManager()
 
     GENDERS = (
@@ -159,6 +152,10 @@ class User(AbstractBaseUser, PermissionsMixin):
     class Meta:
         verbose_name = "이용자"
         verbose_name_plural = "이용자"
+        ordering = [
+            "branch",
+            "srl",
+        ]
 
     def __str__(self):
         if self.gender == "M":
@@ -170,25 +167,3 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     def get_absolute_url(self):
         return reverse("users:detail", kwargs={"srl": self.srl})
-
-
-class BranchViewPermission(Permission):
-    name = "지점 정보를 볼 수 있음"
-    content_type = ContentType(app_label="users", model="user")
-    codename = "can_view_branch"
-
-
-class MemberGroup(Group):
-    name = "회원"
-
-
-class StaffGroup(Group):
-    name = "직원"
-
-
-class ManagerGroup(Group):
-    name = "매니저"
-
-
-class SuperuserGroup(Group):
-    name = "최고 관리자"

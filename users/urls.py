@@ -22,5 +22,6 @@ app_name = apps.get_app_config(__package__).name
 
 urlpatterns = [
     path("", views.UserListView.as_view(), name="list"),
+    path("add/", views.UserCreateView.as_view(), name="add"),
     path("<int:srl>", views.IndexView.as_view(), name="detail"),
 ]

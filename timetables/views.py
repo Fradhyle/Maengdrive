@@ -30,6 +30,8 @@ def init_timetable(request, **kwargs):
     current_time = datetime.datetime.combine(
         datetime.datetime.now().date(), business_hours.open_time
     )
+
+    Timetable.objects.filter(branch=branch, is_holiday=is_holiday).delete()
     period_count = 1
 
     while current_time < converted_close_time:
@@ -63,7 +65,7 @@ class TimetableListView(ListView):
         verbose_names = {}
         fields = self.model._meta.get_fields()
         for field in fields:
-            if type(field) != ManyToOneRel:
+            if type(field) != ManyToOneRel and field.name not in ["srl", "is_holiday"]:
                 verbose_names[field.name] = field.verbose_name
 
         return verbose_names

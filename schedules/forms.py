@@ -1,3 +1,5 @@
+from re import L
+
 from django import forms
 from django.forms import ModelChoiceField, ModelForm
 
@@ -7,48 +9,67 @@ from users.models import User
 
 
 class ScheduleForm(ModelForm):
+    def __init__(self, *args, **kwargs):
+        self.user = kwargs.pop("user")
+        super(ScheduleForm, self).__init__(*args, **kwargs)
+        if self.user.is_superuser:
+            self.fields["branch"] = ModelChoiceField(
+                queryset=Branch.objects.all(),
+                required=True,
+                label="지점",
+                widget=forms.Select(
+                    attrs={
+                        "class": "form-select",
+                    }
+                ),
+            )
+            self.fields["user"] = ModelChoiceField(
+                queryset=User.objects.all(),
+                required=True,
+                label="이용자",
+                widget=forms.TextInput(
+                    attrs={
+                        "class": "form-control",
+                        "list": "user-list",
+                    }
+                ),
+            )
+        else:
+            self.fields["branch"] = ModelChoiceField(
+                queryset=Branch.objects.filter(branch=self.user.branch),
+                required=True,
+                label="지점",
+                widget=forms.Select(
+                    attrs={
+                        "class": "form-select",
+                    }
+                ),
+            )
+            self.fields["user"] = ModelChoiceField(
+                queryset=User.objects.filter(branch=self.user.branch),
+                required=True,
+                label="이용자",
+                widget=forms.TextInput(
+                    attrs={
+                        "class": "form-control",
+                        "list": "user-list",
+                    }
+                ),
+            )
+
     def clean_user(self):
         user = self.cleaned_data["user"]
+        print(user)
+
         return user
-
-    branch = ModelChoiceField(
-        queryset=Branch.objects.all(),
-        required=True,
-        label="지점",
-        widget=forms.Select(
-            attrs={
-                "class": "form-select",
-            },
-        ),
-    )
-
-    user = ModelChoiceField(
-        queryset=User.objects.all(),
-        required=True,
-        label="이용자",
-        widget=forms.TextInput(
-            attrs={
-                "class": "form-select",
-                "list": "user-list",
-            },
-        ),
-    )
 
     class Meta:
         model = Schedule
         fields = (
-            "user",
-            "branch",
             "start_datetime",
             "end_datetime",
         )
         widgets = {
-            # "user": forms.TextInput(
-            #     attrs={
-            #         "class": "form-control",
-            #         "placeholder": "이용자 이름을 입력하세요.",
-            #     },
-            # ),
             "start_datetime": forms.DateTimeInput(
                 attrs={
                     "type": "datetime-local",

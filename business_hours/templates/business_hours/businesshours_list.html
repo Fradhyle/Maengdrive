@@ -29,7 +29,7 @@
                             <td><a href="{% url 'business_hours:detail' branch=object.branch.srl %}">{{ object.branch }}</a></td>
                             <td>{{ object.open_time }}</td>
                             <td>{{ object.close_time }}</td>
-                            <td><button type="button" onclick="location.href='{% url 'timetables:init' branch=object.branch.srl is_holiday=object.is_holiday %}'">초기화</button></td>
+                            <td><button type="button" title="수업 시간 50분, 쉬는 시간 10분을 기준으로 기존 시간표를 삭제하고 시간표를 새로 생성 합니다." onclick="location.href='{% url 'timetables:init' branch=object.branch.srl is_holiday=object.is_holiday %}'">초기화</button></td>
                         </tr>
                 {% endfor %}
             </tbody>

@@ -6,18 +6,9 @@
         {% if verbose_names %}
             <thead>
                 <tr>
-                    <th scope="col">{{ verbose_names.srl }}</th>
-                    <th scope="col">{{ verbose_names.username }}</th>
-                    <th scope="col">{{ verbose_names.name }}</th>
-                    <th scope="col">{{ verbose_names.birthday }}</th>
-                    <th scope="col">{{ verbose_names.gender }}</th>
-                    <th scope="col">{{ verbose_names.phone }}</th>
-                    <th scope="col">{{ verbose_names.license_type }}</th>
-                    <th scope="col">{{ verbose_names.plan_type }}</th>
-                    <th scope="col">{{ verbose_names.branch }}</th>
-                    <th scope="col">{{ verbose_names.is_staff }}</th>
-                    <th scope="col">{{ verbose_names.is_superuser }}</th>
-                    <th scope="col">{{ verbose_names.date_joined }}</th>
+                    {% for name in verbose_names.values %}
+                        <th scope="col">{{ name }}</th>
+                    {% endfor %}
                 </tr>
             </thead>
         {% endif %}

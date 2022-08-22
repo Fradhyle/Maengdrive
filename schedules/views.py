@@ -47,9 +47,17 @@ class ScheduleCreateView(CreateView):
     form_class = ScheduleForm
     success_url = reverse_lazy("schedules:list")
 
+    def get_form_kwargs(self):
+        kwargs = super(ScheduleCreateView, self).get_form_kwargs()
+        kwargs.update({"user": self.request.user})
+        return kwargs
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["page_title"] = "일정 추가"
-        context["user_list"] = User.objects.all()
+        if self.request.user.is_superuser:
+            context["user_list"] = User.objects.all()
+        else:
+            context["user_list"] = User.objects.filter(branch=self.request.user.branch)
 
         return context

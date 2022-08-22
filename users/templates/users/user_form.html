@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+{% extends "main/base.html" %}
+{% load static %}
+{% block content %}
+    <form action="" method="POST" id="timetable-form" class="container d-grid gap-3 justify-content-evenly align-items-center">
+        {% csrf_token %}
+        {{ form.non_field_errors }}
+        <div class="row">
+            <label class="col-4 col-form-label text-nowrap" for="{{ form.username.id_for_label }}">{{ form.username.label }}</label>
+            <div class="col">{{ form.username }}</div>
+            {{ form.username.errors }}
+        </div>
+
+        <div class="row">
+            <label class="col-4 col-form-label text-nowrap" for="{{ form.name.id_for_label }}">{{ form.name.label }}</label>
+            <div class="col">{{ form.name }}</div>
+            {{ form.name.errors }}
+        </div>
+        
+        <div class="row">
+            <label class="col-4 col-form-label text-nowrap" for="{{ form.birthday.id_for_label }}">{{ form.birthday.label }}</label>
+            <div class="col">{{ form.birthday }}</div>
+            {{ form.birthday.errors }}
+        </div>
+        
+        <div class="row">
+            <label class="col-4 col-form-label text-nowrap" for="{{ form.gender.id_for_label }}">{{ form.gender.label }}</label>
+            <div class="col">
+                {% for choice in form.gender %}
+                    <div class="form-check">
+                        {{ choice.tag }}
+                        <label class="form-check-label" for="{{ choice.id_for_label }}">{{ choice.choice_label }}</label>
+                    </div>
+                {% endfor %}
+            </div>
+            {{ form.gender.errors }}
+        </div>
+        
+        <div class="row">
+            <label class="col-4 col-form-label text-nowrap" for="{{ form.phone.id_for_label }}">{{ form.phone.label }}</label>
+            <div class="col">{{ form.phone }}</div>
+            {{ form.phone.errors }}
+        </div>
+        
+        <div class="row">
+            <label class="col-4 col-form-label text-nowrap" for="{{ form.license_type.id_for_label }}">{{ form.license_type.label }}</label>
+            <div class="col">
+                {% for choice in form.license_type %}
+                    <div class="form-check">
+                        {{ choice.tag }}
+                        <label class="form-check-label" for="{{ choice.id_for_label }}">{{ choice.choice_label }}</label>
+                    </div>
+                {% endfor %}
+            </div>
+            {{ form.license_type.errors }}
+        </div>
+
+        <div class="row">
+            <label class="col-4 col-form-label text-nowrap" for="{{ form.plan_type.id_for_label }}">{{ form.plan_type.label }}</label>
+            <div class="col">
+                {% for choice in form.plan_type %}
+                    <div class="form-check">
+                        {{ choice.tag }}
+                        <label class="form-check-label" for="{{ choice.id_for_label }}">{{ choice.choice_label }}</label>
+                    </div>
+                {% endfor %}
+            </div>
+            {{ form.plan_type.errors }}
+        </div>
+
+        <div class="row">
+            <label class="col-4 col-form-label text-nowrap" for="{{ form.is_staff.id_for_label }}">{{ form.is_staff.label }}</label>
+            <div class="col">
+                {% for choice in form.is_staff %}
+                    <div class="form-check">
+                        {{ choice.tag }}
+                        <label class="form-check-label" for="{{ choice.id_for_label }}">{{ choice.choice_label }}</label>
+                    </div>
+                {% endfor %}
+            </div>
+            {{ form.is_staff.errors }}
+        </div>
+        
+        <div class="row">
+            <div class="col d-flex justify-content-end">
+                <button class="btn btn-primary" type="submit">저장</button>
+            </div>
+        </div>
+    </form>
+{% endblock %}
