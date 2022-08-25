@@ -24,7 +24,7 @@
                     {% endif %}
                             <th scope="row">{{ object.srl }}</th>
                             <td>{{ object.username }}</td>
-                            <td>{{ object.name }}</td>
+                            <td>{{ object.full_name }}</td>
                             <td>{{ object.birthday }}</td>
                             {% if object.gender == "F" %}
                                 <td>여</td>
@@ -34,29 +34,30 @@
                                 <td>확인 불가</td>
                             {% endif %}
                             <td>{{ object.phone }}</td>
+                            <td>{{ object.branch }}</td>
                             <td>{{ object.license_type }}</td>
                             <td>{{ object.plan_type }}</td>
-                            <td>{{ object.branch }}</td>
-                            {% if object.is_staff == False %}
+                            {% if object.staff == False %}
                                 <td>부</td>
-                            {% elif object.is_staff == True %}
+                            {% elif object.staff == True %}
                                 <td>여</td>
                             {% else %}
                                 <td>확인 불가</td>
                             {% endif %}
-                            {% if object.is_superuser == False %}
+                            {% if object.superuser == False %}
                                 <td>부</td>
-                            {% elif object.is_superuser == True %}
+                            {% elif object.superuser == True %}
                                 <td>여</td>
                             {% else %}
                                 <td>확인 불가</td>
                             {% endif %}
                             <td>{{ object.date_joined }}</td>
+                            <td>{{ object.group }}</td>
                         </tr>
                 {% endfor %}
             </tbody>
         {% endif %}
     </table>
-    <button type="button" onclick="location.href='{% url 'timetables:add' %}'">추가</button>
+    <button type="button" onclick="location.href='{% url 'users:add' %}'">추가</button>
     <button type="button" onclick="location.href='{{ request.META.HTTP_REFERER }}'">이전</button>
 {% endblock %}

@@ -1,4 +1,5 @@
 from django import forms
+from django.contrib.auth.forms import AuthenticationForm
 from django.forms import ModelChoiceField, ModelForm
 
 from branches.models import Branch
@@ -32,8 +33,8 @@ class UserForm(ModelForm):
                 ),
             )
 
-    def clean_phone(self, field_name):
-        phone_number = self.cleaned_data.get(field_name)
+    def clean_phone(self):
+        phone_number = self.cleaned_data["phone"]
         phone_number = phone_number.replace("-", "")
 
         if len(phone_number) == 0:
@@ -57,35 +58,16 @@ class UserForm(ModelForm):
         return phone_number
 
     class Meta:
-        GENDERS = (
-            ("M", "남성"),
-            ("F", "여성"),
-        )
-        LICENSE_TYPES = (
-            (None, "미선택"),
-            ("1L", "1종 대형"),
-            ("1O", "1종 보통"),
-            ("1OA", "1종 보통 (자동)"),
-            ("2O", "2종 보통"),
-            ("2OA", "2종 보통 (자동)"),
-            ("P", "장롱 면허"),
-        )
-        PLAN_TYPES = (
-            (None, "미선택"),
-            ("T", "시간제"),
-            ("G", "합격보장제"),
-            ("P", "장롱 면허"),
-        )
         model = User
         fields = (
             "username",
-            "name",
+            "full_name",
             "birthday",
             "gender",
             "phone",
             "license_type",
             "plan_type",
-            "is_staff",
+            "staff",
         )
         widgets = {
             "username": forms.TextInput(
@@ -93,7 +75,7 @@ class UserForm(ModelForm):
                     "class": "form-control",
                 }
             ),
-            "name": forms.TextInput(
+            "full_name": forms.TextInput(
                 attrs={
                     "class": "form-control",
                 }
@@ -105,9 +87,7 @@ class UserForm(ModelForm):
                 }
             ),
             "gender": forms.RadioSelect(
-                choices=GENDERS,
                 attrs={
-                    "type": "radio",
                     "class": "form-check-input",
                 },
             ),
@@ -117,25 +97,43 @@ class UserForm(ModelForm):
                     "class": "form-control",
                 },
             ),
-            "license_type": forms.RadioSelect(
-                choices=LICENSE_TYPES,
+            "license_type": forms.Select(
                 attrs={
-                    "type": "radio",
-                    "class": "form-check-input",
+                    "class": "form-select",
                 },
             ),
-            "plan_type": forms.RadioSelect(
-                choices=PLAN_TYPES,
+            "plan_type": forms.Select(
                 attrs={
-                    "type": "radio",
-                    "class": "form-check-input",
+                    "class": "form-select",
                 },
             ),
-            "is_staff": forms.RadioSelect(
+            "staff": forms.RadioSelect(
                 choices=[(True, "예"), (False, "아니오")],
                 attrs={
-                    "type": "radio",
                     "class": "form-check-input",
+                },
+            ),
+        }
+
+
+class LoginForm(AuthenticationForm):
+    class Meta:
+        model = User
+        fields = (
+            "username",
+            "password",
+        )
+        widgets = {
+            "username": forms.DateInput(
+                attrs={
+                    "type": "date",
+                    "class": "form-control",
+                },
+            ),
+            "password": forms.DateInput(
+                attrs={
+                    "type": "date",
+                    "class": "form-control",
                 },
             ),
         }

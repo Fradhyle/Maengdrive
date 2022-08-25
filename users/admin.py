@@ -7,9 +7,9 @@ from users.models import User
 
 
 # Register your models here.
-@admin.action(description="선택한 이용자를 비활성화")
+@admin.action(description="선택한 이용자를 비활성화합니다")
 def deactivate_user(queryset):
-    queryset.update(is_active=False)
+    queryset.update(active=False)
 
 
 @admin.register(User)
@@ -18,29 +18,28 @@ class UserModelAdmin(ModelAdmin):
 
     list_display = (
         "username",
-        "name",
+        "full_name",
         "gender",
         "license_type",
         "plan_type",
         "branch",
-        "is_active",
-        "is_staff",
-        "is_superuser",
+        "active",
+        "staff",
+        "superuser",
         "date_joined",
     )
 
     list_display_links = ("username",)
 
     list_editable = (
-        "name",
+        "full_name",
         "gender",
         "license_type",
         "plan_type",
         "branch",
-        "is_active",
-        "is_staff",
-        "is_superuser",
-        "date_joined",
+        "active",
+        "staff",
+        "superuser",
     )
 
     list_filter = (
@@ -48,9 +47,9 @@ class UserModelAdmin(ModelAdmin):
         "license_type",
         "plan_type",
         "branch",
-        "is_active",
-        "is_staff",
-        "is_superuser",
+        "active",
+        "staff",
+        "superuser",
     )
 
     actions = (deactivate_user,)

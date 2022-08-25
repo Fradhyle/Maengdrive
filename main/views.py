@@ -34,3 +34,12 @@ class IndexView(TemplateView, TemplateResponseMixin):
             pass
 
         return context
+
+
+# class UserLoginView(auth_views.LoginView):
+#     if form.is_valid():
+#         username = request.POST["username"]
+#         password = request.POST["password"]
+#         user = authenticate(request, username=username, password=password)
+#         if user is not None:
+#             login(request)

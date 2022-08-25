@@ -1,5 +1,3 @@
-from re import L
-
 from django import forms
 from django.forms import ModelChoiceField, ModelForm
 
@@ -12,7 +10,7 @@ class ScheduleForm(ModelForm):
     def __init__(self, *args, **kwargs):
         self.user = kwargs.pop("user")
         super(ScheduleForm, self).__init__(*args, **kwargs)
-        if self.user.is_superuser:
+        if self.user.superuser:
             self.fields["branch"] = ModelChoiceField(
                 queryset=Branch.objects.all(),
                 required=True,
@@ -57,31 +55,24 @@ class ScheduleForm(ModelForm):
                 ),
             )
 
-    def clean_user(self):
-        user = self.cleaned_data["user"]
-        print(user)
-
-        return user
-
     class Meta:
         model = Schedule
         fields = (
-            "start_datetime",
-            "end_datetime",
+            "branch",
+            "user",
+            "date",
+            "period",
         )
         widgets = {
-            "start_datetime": forms.DateTimeInput(
+            "date": forms.DateInput(
                 attrs={
-                    "type": "datetime-local",
+                    "type": "date",
                     "class": "form-control",
-                    "placeholder": "시작 시간을 입력하세요.",
                 },
             ),
-            "end_datetime": forms.DateTimeInput(
+            "period": forms.NumberInput(
                 attrs={
-                    "type": "datetime-local",
                     "class": "form-control",
-                    "placeholder": "종료 시간을 입력하세요.",
                 },
             ),
         }

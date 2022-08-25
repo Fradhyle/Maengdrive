@@ -6,6 +6,7 @@ from django.views.generic.list import ListView
 
 from business_hours.forms import BusinessHoursForm
 from business_hours.models import BusinessHours
+from timetables.models import Timetable
 
 
 # Create your views here.
@@ -43,7 +44,7 @@ class BusinessHoursCreateView(CreateView):
 
 
 class BusinessHoursDetailView(DetailView):
-    model = BusinessHours
+    model = Timetable
 
     def get_queryset(self):
         if "branch" in self.kwargs.keys():

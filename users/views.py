@@ -1,3 +1,5 @@
+from django.contrib.auth import authenticate, login
+from django.contrib.auth import views as auth_views
 from django.db.models.fields.reverse_related import ManyToOneRel
 from django.urls import reverse_lazy
 from django.views.generic.base import TemplateView
@@ -32,9 +34,7 @@ class UserListView(ListView):
         pass_list = [
             "password",
             "last_login",
-            "is_active",
-            "groups",
-            "user_permissions",
+            "active",
         ]
         fields = self.model._meta.get_fields()
         for field in fields:
@@ -66,3 +66,8 @@ class UserCreateView(CreateView):
         context["page_title"] = "이용자 추가"
 
         return context
+
+
+# class LoginView(auth_views.LoginView):
+#     authenticate()
+#     login()

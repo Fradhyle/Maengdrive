@@ -14,7 +14,7 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.apps import apps
-from django.urls import path
+from django.urls import include, path
 
 from users import views
 
@@ -24,4 +24,5 @@ urlpatterns = [
     path("", views.UserListView.as_view(), name="list"),
     path("add/", views.UserCreateView.as_view(), name="add"),
     path("<int:srl>", views.IndexView.as_view(), name="detail"),
+    path("", include("django.contrib.auth.urls")),
 ]

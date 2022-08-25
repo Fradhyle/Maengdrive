@@ -18,11 +18,13 @@ class Schedule(models.Model):
         on_delete=models.DO_NOTHING,
         verbose_name="지점",
     )
-    start_datetime = models.DateTimeField(
-        verbose_name="시작 일시",
+    date = models.DateField(
+        verbose_name="일자",
     )
-    end_datetime = models.DateTimeField(
-        verbose_name="종료 일시",
+    period = models.DecimalField(
+        max_digits=2,
+        decimal_places=0,
+        verbose_name="교시",
     )
 
     class Meta:
@@ -30,12 +32,22 @@ class Schedule(models.Model):
         verbose_name_plural = "일정"
         ordering = [
             "branch",
-            "start_datetime",
+            "date",
+            "period",
+        ]
+        unique_together = [
+            "user",
+            "date",
+            "period",
         ]
 
-    # def __str__(self):
-    #     branch_name = Branch.objects.get(srl=self.branch_srl)
-    #     return branch_name +  + self.period + "교시"
+    def __str__(self):
+        if self.user.gender == "M":
+            gender_short = "남"
+        elif self.user.gender == "F":
+            gender_short = "여"
+
+        return f"{self.branch} {self.date.strftime('%y%m%d')} {self.period}교시 {self.user.full_name}{self.user.birthday.strftime('%y%m%d')}{gender_short}"
 
     # def get_absolute_url(self):
     #     return reverse("timetable:index", kwargs={"srl": self.srl})

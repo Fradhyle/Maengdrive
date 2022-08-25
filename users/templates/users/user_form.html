@@ -12,9 +12,9 @@
         </div>
 
         <div class="row">
-            <label class="col-4 col-form-label text-nowrap" for="{{ form.name.id_for_label }}">{{ form.name.label }}</label>
-            <div class="col">{{ form.name }}</div>
-            {{ form.name.errors }}
+            <label class="col-4 col-form-label text-nowrap" for="{{ form.full_name.id_for_label }}">{{ form.full_name.label }}</label>
+            <div class="col">{{ form.full_name }}</div>
+            {{ form.full_name.errors }}
         </div>
         
         <div class="row">
@@ -45,12 +45,7 @@
         <div class="row">
             <label class="col-4 col-form-label text-nowrap" for="{{ form.license_type.id_for_label }}">{{ form.license_type.label }}</label>
             <div class="col">
-                {% for choice in form.license_type %}
-                    <div class="form-check">
-                        {{ choice.tag }}
-                        <label class="form-check-label" for="{{ choice.id_for_label }}">{{ choice.choice_label }}</label>
-                    </div>
-                {% endfor %}
+                {{ form.license_type }}
             </div>
             {{ form.license_type.errors }}
         </div>
@@ -58,27 +53,22 @@
         <div class="row">
             <label class="col-4 col-form-label text-nowrap" for="{{ form.plan_type.id_for_label }}">{{ form.plan_type.label }}</label>
             <div class="col">
-                {% for choice in form.plan_type %}
-                    <div class="form-check">
-                        {{ choice.tag }}
-                        <label class="form-check-label" for="{{ choice.id_for_label }}">{{ choice.choice_label }}</label>
-                    </div>
-                {% endfor %}
+                {{ form.plan_type }}
             </div>
             {{ form.plan_type.errors }}
         </div>
 
         <div class="row">
-            <label class="col-4 col-form-label text-nowrap" for="{{ form.is_staff.id_for_label }}">{{ form.is_staff.label }}</label>
+            <label class="col-4 col-form-label text-nowrap" for="{{ form.staff.id_for_label }}">{{ form.staff.label }}</label>
             <div class="col">
-                {% for choice in form.is_staff %}
+                {% for choice in form.staff %}
                     <div class="form-check">
                         {{ choice.tag }}
                         <label class="form-check-label" for="{{ choice.id_for_label }}">{{ choice.choice_label }}</label>
                     </div>
                 {% endfor %}
             </div>
-            {{ form.is_staff.errors }}
+            {{ form.staff.errors }}
         </div>
         
         <div class="row">

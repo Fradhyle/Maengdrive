@@ -15,11 +15,20 @@ phone_validator = RegexValidator(
 
 class UserManager(BaseUserManager):
     def create_user(
-        self, username, name, birthday, gender, phone, branch, password=None, **kwargs
+        self,
+        username,
+        full_name,
+        birthday,
+        gender,
+        phone,
+        branch,
+        password=None,
+        **kwargs,
     ):
         user = self.model(
             username=username,
-            name=name,
+            full_name=full_name,
+            group=Group.objects.get_or_create(name="회원"),
             birthday=birthday,
             gender=gender,
             phone=phone,
@@ -34,24 +43,26 @@ class UserManager(BaseUserManager):
         return user
 
     def create_staff(
-        self, username, name, birthday, gender, phone, branch, password, **kwargs
+        self, username, full_name, birthday, gender, phone, branch, password, **kwargs
     ):
         user = self.create_user(
-            username, name, birthday, gender, phone, branch, password, kwargs
+            username, full_name, birthday, gender, phone, branch, password, kwargs
         )
-        user.is_staff = True
+        user.staff = True
+        user.group = (Group.objects.get_or_create(name="직원"),)
         user.save(using=self._db)
 
         return user
 
     def create_superuser(
-        self, username, name, birthday, gender, phone, branch, password, **kwargs
+        self, username, full_name, birthday, gender, phone, branch, password, **kwargs
     ):
         user = self.create_user(
-            username, name, birthday, gender, phone, branch, password, kwargs
+            username, full_name, birthday, gender, phone, branch, password, kwargs
         )
-        user.is_staff = True
-        user.is_superuser = True
+        user.staff = True
+        user.superuser = True
+        user.group = (Group.objects.get_or_create(name="최고관리자"),)
         user.save(using=self._db)
 
         return user
@@ -61,6 +72,7 @@ class User(AbstractBaseUser):
     objects = UserManager()
 
     GENDERS = (
+        (None, "미선택"),
         ("M", "남성"),
         ("F", "여성"),
     )
@@ -87,8 +99,12 @@ class User(AbstractBaseUser):
         unique=True,
         verbose_name="아이디",
     )
-    name = models.TextField(
+    full_name = models.TextField(
         verbose_name="이름",
+    )
+    group = models.ManyToManyField(
+        to=Group,
+        verbose_name="그룹",
     )
     birthday = models.DateField(
         verbose_name="생년월일",
@@ -100,6 +116,11 @@ class User(AbstractBaseUser):
     phone = models.TextField(
         verbose_name="전화번호",
         validators=(phone_validator,),
+    )
+    branch = models.ForeignKey(
+        "branches.Branch",
+        verbose_name="소속 지점",
+        on_delete=models.DO_NOTHING,
     )
     license_type = models.CharField(
         max_length=3,
@@ -117,25 +138,23 @@ class User(AbstractBaseUser):
         null=True,
         default=None,
     )
-    branch = models.ForeignKey(
-        "branches.Branch",
-        verbose_name="소속 지점",
-        on_delete=models.DO_NOTHING,
-    )
-    is_active = models.BooleanField(
+    active = models.BooleanField(
         verbose_name="활성 상태",
         default=True,
     )
-    is_staff = models.BooleanField(
+    staff = models.BooleanField(
         verbose_name="직원 여부",
         default=False,
     )
-    is_superuser = models.BooleanField(
+    superuser = models.BooleanField(
         verbose_name="최고관리자 여부",
         default=False,
     )
+    last_login = models.DateTimeField(
+        verbose_name="최종 접속 일시",
+    )
     date_joined = models.DateTimeField(
-        verbose_name="가입일",
+        verbose_name="가입 일시",
         default=timezone.now,
     )
 
@@ -148,6 +167,24 @@ class User(AbstractBaseUser):
         "phone",
         "branch",
     )
+
+    @property
+    def is_active(self):
+        return self.active
+
+    @property
+    def is_staff(self):
+        return self.staff
+
+    @property
+    def is_superuser(self):
+        return self.superuser
+
+    def has_perm(self, perm, obj=None):
+        return self.staff
+
+    def has_module_perms(self, app_label):
+        return self.staff
 
     class Meta:
         verbose_name = "이용자"
@@ -163,7 +200,7 @@ class User(AbstractBaseUser):
         elif self.gender == "F":
             gender_short = "여"
 
-        return f"{self.name} ({self.branch}/{self.birthday.strftime('%y%m%d')}/{gender_short})"
+        return f"{self.full_name} ({self.branch}/{self.birthday.strftime('%y%m%d')}/{gender_short})"
 
     def get_absolute_url(self):
         return reverse("users:detail", kwargs={"srl": self.srl})

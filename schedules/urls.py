@@ -22,5 +22,26 @@ app_name = apps.get_app_config(__package__).name
 
 urlpatterns = [
     path("", views.ScheduleListView.as_view(), name="list"),
+    path("<int:branch>/", views.BranchScheduleListView.as_view(), name="branch_list"),
+    # path(
+    #     "<int:branch>/<int:year>/",
+    #     views.DateScheduleListView.as_view(),
+    #     name="branch_year_schedule",
+    # ),
+    # path(
+    #     "<int:branch>/<int:year>/<int:month>/",
+    #     views.DateScheduleListView.as_view(),
+    #     name="branch_month_schedule",
+    # ),
+    path(
+        "<int:branch>/<int:year>/<int:week>/",
+        views.WeekScheduleListView.as_view(),
+        name="branch_week_schedule",
+    ),
+    # path(
+    #     "<int:branch>/<int:year>/<int:month>/<int:day>/",
+    #     views.DateScheduleListView.as_view(),
+    #     name="branch_day_schedule",
+    # ),
     path("add/", views.ScheduleCreateView.as_view(), name="add"),
 ]
