@@ -25,17 +25,17 @@
                             {% else%}
                                 <td>
                                 {% for schedule in schedules %}
-                                    <a href="#" title="{{ schedule.user.branch }}/{{ schedule.user.birthday|date:"ymd" }}/{{ schedule.user.gender|translate_gender_short }}">{{ schedule.user.full_name }}</a><br>
+                                    <a href="#{{ schedule.srl }}" title="{{ schedule.user.branch }}/{{ schedule.user.birthday|date:"ymd" }}/{{ schedule.user.gender|translate_gender_short }}">{{ schedule.user.full_name }}</a><br>
                                 {% endfor %}
                                 </td>
                             {% endif %}
-                            {% comment %} <td>{{ schedules.user }}</td> {% endcomment %}
                         {% endif %}
                     {% endfor %}
                 </tr>
             {% endfor %}
         </tbody>
     </table>
-    <button type="button" onclick="location.href='{% url 'schedules:branch_week_schedule' branch=branch year=year week=week|add:"-1" %}'">지난 주</button>
-    <button type="button" onclick="location.href='{% url 'schedules:branch_week_schedule' branch=branch year=year week=week|add:"1" %}'">다음 주</button>
+    <button type="button" class="btn btn-primary" onclick="location.href='{% url 'schedules:branch_week_schedule' branch=branch year=year week=week|add:"-1" %}'">지난 주</button>
+    <button type="button" class="btn btn-primary" onclick="location.href='{% url 'schedules:branch_week_schedule' branch=branch year=current_year week=current_week %}'">현재</button>
+    <button type="button" class="btn btn-primary" onclick="location.href='{% url 'schedules:branch_week_schedule' branch=branch year=year week=week|add:"1" %}'">다음 주</button>
 {% endblock %}

@@ -77,6 +77,11 @@
                                     <li>
                                         <a class="dropdown-item" href="{% url 'schedules:list' %}">일정 목록</a>
                                     </li>
+                                    {% if user.is_authenticated %}
+                                        <li>
+                                            <a class="dropdown-item" href="{% url 'schedules:branch_week_schedule' branch=user.branch.srl year=current_year week=current_week %}">주간 일정 보기</a>
+                                        </li>
+                                    {% endif %}
                                     <li>
                                         <a class="dropdown-item" href="{% url 'schedules:add' %}">일정 추가</a>
                                     </li>

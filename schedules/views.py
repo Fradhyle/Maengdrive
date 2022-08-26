@@ -1,7 +1,10 @@
 import datetime
 
 from django.apps import apps
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.models import AnonymousUser
 from django.db.models.fields.reverse_related import ManyToOneRel
+from django.http import HttpResponseRedirect
 from django.urls import reverse_lazy
 from django.views.generic.base import TemplateView
 from django.views.generic.edit import CreateView
@@ -85,10 +88,11 @@ class BranchScheduleListView(ListView):
         return context
 
 
-class WeekScheduleListView(ListView):
+class WeekScheduleListView(LoginRequiredMixin, ListView):
     model = Schedule
     paginate_by = 10
     template_name = "schedules/branch_schedule_list_week.html"
+    login_url = reverse_lazy("users:login")
 
     def get_dates_of_week(self):
         year = self.kwargs["year"]
@@ -111,6 +115,9 @@ class WeekScheduleListView(ListView):
     def get_queryset(self):
         object_list = []
         date_list = self.get_dates_of_week()
+
+        if self.request.user.superuser == False:
+            self.kwargs["branch"] = self.request.user.branch
 
         if all(e in self.kwargs.keys() for e in ["branch", "year", "week"]):
             queryset = self.model.objects.filter(
@@ -146,6 +153,9 @@ class WeekScheduleListView(ListView):
         context["branch"] = self.kwargs["branch"]
         context["year"] = self.kwargs["year"]
         context["week"] = self.kwargs["week"]
+        context["current_user"] = self.request.user
+        context["current_year"] = datetime.datetime.now().isocalendar()[0]
+        context["current_week"] = datetime.datetime.now().isocalendar()[1]
         context["dates_of_week"] = self.get_dates_of_week()
         context["verbose_names"] = self.get_verbose_names()
 
