@@ -2,7 +2,7 @@
 {% extends "main/base.html" %}
 {% load static %}
 {% block content %}
-<form action="" method="POST" id="timetable-form" class="container d-grid gap-3 justify-content-evenly align-items-center">
+<form action="" method="POST" class="container d-grid gap-3 justify-content-evenly align-items-center">
     {% csrf_token %}
     {{ form.non_field_errors }}
     <div class="row">

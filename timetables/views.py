@@ -9,7 +9,7 @@ from django.views.generic.edit import CreateView
 from django.views.generic.list import ListView
 
 from branches.models import Branch
-from business_hours.models import BusinessHours
+from business_hours.models import BusinessHour
 from timetables.forms import TimetableForm
 from timetables.models import Timetable
 
@@ -21,7 +21,7 @@ def init_timetable(request, **kwargs):
         is_holiday = False
     elif kwargs["is_holiday"] == "True":
         is_holiday = True
-    business_hours = BusinessHours.objects.get(branch=branch, is_holiday=is_holiday)
+    business_hours = BusinessHour.objects.get(branch=branch, is_holiday=is_holiday)
     converted_close_time = datetime.datetime.combine(
         datetime.datetime.now().date(), business_hours.close_time
     )

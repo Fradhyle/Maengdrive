@@ -6,31 +6,20 @@
         {% csrf_token %}
         {{ form.non_field_errors }}        
         <div class="row">            
-            <label class="col-3 col-form-label text-nowrap" for="{{ form.name.id_for_label }}">{{ form.name.label }}</label>
+            <label class="col-4 col-form-label text-nowrap" for="{{ form.name.id_for_label }}">{{ form.name.label }}</label>
             <div class="col">{{ form.name }}</div>
             {{ form.name.errors }}
         </div>
         
-        <div class="row">            
-            <label class="col-3 col-form-label text-nowrap" for="{{ form.open_time.id_for_label }}">{{ form.open_time.label }}</label>
-            <div class="col">{{ form.open_time }}</div>
-            {{ form.open_time.errors }}
-        </div>
         
         <div class="row">            
-            <label class="col-3 col-form-label text-nowrap" for="{{ form.close_time.id_for_label }}">{{ form.close_time.label }}</label>
-            <div class="col">{{ form.close_time }}</div>
-            {{ form.close_time.errors }}
-        </div>
-
-        <div class="row">            
-            <label class="col-3 col-form-label text-nowrap" for="{{ form.equipment_count.id_for_label }}">{{ form.equipment_count.label }}</label>
+            <label class="col-4 col-form-label text-nowrap" for="{{ form.equipment_count.id_for_label }}">{{ form.equipment_count.label }}</label>
             <div class="col">{{ form.equipment_count }}</div>
             {{ form.equipment_count.errors }}
         </div>
         
         <div class="row">
-            <label class="col-3 col-form-label text-nowrap" for="{{ form.postcode.id_for_label }}">{{ form.postcode.label }}</label>
+            <label class="col-4 col-form-label text-nowrap" for="{{ form.postcode.id_for_label }}">{{ form.postcode.label }}</label>
             <div class="col">{{ form.postcode }}</div>
             <div class="col-auto text-nowrap">
                 <!-- Address Search Modal Button -->
@@ -40,38 +29,94 @@
         </div>
         
         <div class="row">
-            <label class="col-3 col-form-label text-nowrap" for="{{ form.address1.id_for_label }}">{{ form.address1.label }}</label>
+            <label class="col-4 col-form-label text-nowrap" for="{{ form.address1.id_for_label }}">{{ form.address1.label }}</label>
             <div class="col">{{ form.address1 }}</div>
             {{ form.address1.errors }}
         </div>
         
         <div class="row">
-            <label class="col-3 col-form-label text-nowrap" for="{{ form.address2.id_for_label }}">{{ form.address2.label }}</label>
+            <label class="col-4 col-form-label text-nowrap" for="{{ form.address2.id_for_label }}">{{ form.address2.label }}</label>
             <div class="col">{{ form.address2 }}</div>
             {{ form.address2.errors }}
         </div>
-
+        
         <div class="row">
             <div class="col d-flex justify-content-end">&#8251; 참고 항목(괄호 안의 주소)은 입력하지 않아도 됩니다.</div>
         </div>
         
         <div class="row">
-            <label class="col-3 col-form-label text-nowrap" for="{{ form.phone1.id_for_label }}">{{ form.phone1.label }}</label>
+            <label class="col-4 col-form-label text-nowrap" for="{{ form.phone1.id_for_label }}">{{ form.phone1.label }}</label>
             <div class="col">{{ form.phone1 }}</div>
             {{ form.phone1.errors }}
         </div>
         
         <div class="row">
-            <label class="col-3 col-form-label text-nowrap" for="{{ form.phone2.id_for_label }}">{{ form.phone2.label }}</label>
+            <label class="col-4 col-form-label text-nowrap" for="{{ form.phone2.id_for_label }}">{{ form.phone2.label }}</label>
             <div class="col">{{ form.phone2 }}</div>
             {{ form.phone2.errors }}
         </div>
-
+        
         <div class="row">
             <div class="col d-flex justify-content-end">
                 <p>
                     &#8251; 전화번호는 &lsquo;전화번호 1&rsquo;부터 입력하세요.<br>
                     둘 중 하나만 입력해도 됩니다.
+                </p>
+            </div>
+        </div>
+
+        <div class="row">
+            <label class="col-4 col-form-label text-nowrap" for="{{ form.weekday_open_time.id_for_label }}">{{ form.weekday_open_time.label }}</label>
+            <div class="col">{{ form.weekday_open_time }}</div>
+            {{ form.weekday_open_time.errors }}
+        </div>
+        
+        <div class="row">
+            <label class="col-4 col-form-label text-nowrap" for="{{ form.weekday_close_time.id_for_label }}">{{ form.weekday_close_time.label }}</label>
+            <div class="col">{{ form.weekday_close_time }}</div>
+            {{ form.weekday_close_time.errors }}
+        </div>
+
+        <div class="row">
+            <label class="col-4 col-form-label text-nowrap" for="{{ form.holiday_open_time.id_for_label }}">{{ form.holiday_open_time.label }}</label>
+            <div class="col">{{ form.holiday_open_time }}</div>
+            {{ form.holiday_open_time.errors }}
+        </div>
+        
+        <div class="row">
+            <label class="col-4 col-form-label text-nowrap" for="{{ form.holiday_close_time.id_for_label }}">{{ form.holiday_close_time.label }}</label>
+            <div class="col">{{ form.holiday_close_time }}</div>
+            {{ form.holiday_close_time.errors }}
+        </div>
+        
+        <div class="row">
+            <label class="col-4 col-form-label text-nowrap" for="{{ form.lesson_time.id_for_label }}">{{ form.lesson_time.label }}</label>
+            <div class="col input-group">{{ form.lesson_time }}
+            <span class="input-group-text" id="minute-unit">분</span>
+        </div>
+            {{ form.lesson_time.errors }}
+        </div>
+
+        <div class="row">
+            <div class="col d-flex justify-content-end">
+                <p>
+                    &#8251; 수업 시간 길이를 분 단위로 입력하세요.<br>
+                    기본값은 110분입니다.
+                </p>
+            </div>
+        </div>
+        
+        <div class="row">
+            <label class="col-4 col-form-label text-nowrap" for="{{ form.break_time.id_for_label }}">{{ form.break_time.label }}</label>
+            <div class="col input-group">{{ form.break_time }}<span class="input-group-text" id="minute-unit">분</span></div>
+            {{ form.break_time.errors }}
+        </div>
+
+        <div class="row">
+            <div class="col d-flex justify-content-end">
+                <p>
+                    &#8251; 쉬는 시간 길이를 분 단위로 입력하세요.<br>
+                    기본값은 10분입니다.
                 </p>
             </div>
         </div>
@@ -81,7 +126,7 @@
                 <button class="btn btn-primary" type="submit">저장</button>
             </div>
         </div>
-        
+
         <!-- Address Search Modal -->
         <div class="modal fade" id="address-search-modal" data-bs-backdrop="static" data-bs-keyboard="false" aria-hidden="true" aria-labelledby="address-search-modal" tabindex="-1">
             <div class="modal-dialog modal-lg">
@@ -110,15 +155,15 @@
                     <div class="modal-footer justify-content-center">
                         <span>자료 출처: <a href="https://www.juso.go.kr">주소정보누리집</a></span>
                         <!-- <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
-                        <button type="button" class="btn btn-primary">저장</button> -->
+                            <button type="button" class="btn btn-primary">저장</button> -->
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
-    </form>
-    
-    <script type="text/javascript" src="{% static 'branches/js/address-search.js' %}"></script>
-    <script type="text/javascript">
-        const confmKey = "{{ confmKey }}"
-    </script>
-{% endblock %}
+        </form>
+        
+        <script type="text/javascript" src="{% static 'branches/js/address-search.js' %}"></script>
+        <script type="text/javascript">
+            const confmKey = "{{ confmKey }}"
+        </script>
+        {% endblock %}

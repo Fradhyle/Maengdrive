@@ -1,17 +1,17 @@
 from django.db.models.fields.reverse_related import ManyToOneRel
 from django.urls import reverse_lazy
 from django.views.generic.detail import DetailView
-from django.views.generic.edit import CreateView
+from django.views.generic.edit import CreateView, DeleteView, UpdateView
 from django.views.generic.list import ListView
 
-from business_hours.forms import BusinessHoursForm
-from business_hours.models import BusinessHours
+from business_hours.forms import BusinessHourForm
+from business_hours.models import BusinessHour
 from timetables.models import Timetable
 
 
 # Create your views here.
-class BusinessHoursListView(ListView):
-    model = BusinessHours
+class BusinessHourListView(ListView):
+    model = BusinessHour
     paginate_by = 10
 
     def get_verbose_names(self):
@@ -31,9 +31,9 @@ class BusinessHoursListView(ListView):
         return context
 
 
-class BusinessHoursCreateView(CreateView):
-    model = BusinessHours
-    form_class = BusinessHoursForm
+class BusinessHourCreateView(CreateView):
+    model = BusinessHour
+    form_class = BusinessHourForm
     success_url = reverse_lazy("business_hours:list")
 
     def get_context_data(self, **kwargs):
@@ -43,7 +43,37 @@ class BusinessHoursCreateView(CreateView):
         return context
 
 
-class BusinessHoursDetailView(DetailView):
+class BusinessHourDeleteView(DeleteView):
+    model = BusinessHour
+    form_class = BusinessHourForm
+    success_url = reverse_lazy("business_hours:list")
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["page_title"] = "시간표 추가"
+
+        return context
+
+
+class BusinessHourUpdateView(UpdateView):
+    model = BusinessHour
+    form_class = BusinessHourForm
+    success_url = reverse_lazy("business_hours:list")
+
+    def get_object(self, queryset=None):
+        object = BusinessHour.objects.get(
+            branch=self.kwargs["branch"], srl=self.kwargs["srl"]
+        )
+        return object
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["page_title"] = "시간표 추가"
+
+        return context
+
+
+class BusinessHourDetailView(DetailView):
     model = Timetable
 
     def get_queryset(self):

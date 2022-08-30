@@ -3,7 +3,7 @@ from django.db.models.fields.reverse_related import ManyToOneRel
 from django.http import HttpResponseRedirect
 from django.urls import reverse_lazy
 from django.views.generic.detail import DetailView
-from django.views.generic.edit import CreateView
+from django.views.generic.edit import CreateView, UpdateView
 from django.views.generic.list import ListView
 
 from branches.forms import BranchForm
@@ -64,6 +64,24 @@ class BranchCreateView(CreateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["page_title"] = "지점 추가"
+        # !IMPORTANT: Please add juso.go.kr API Key if not using settings.json
+        context["confmKey"] = settings.SETTINGS["confmKey"]
+
+        return context
+
+
+class BranchUpdateView(UpdateView):
+    model = Branch
+    form_class = BranchForm
+    success_url = reverse_lazy("branches:list")
+
+    def get_object(self, queryset=None):
+        object = self.model.objects.get(srl=self.kwargs["srl"])
+        return object
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["page_title"] = "지점 편집"
         # !IMPORTANT: Please add juso.go.kr API Key if not using settings.json
         context["confmKey"] = settings.SETTINGS["confmKey"]
 

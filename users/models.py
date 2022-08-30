@@ -102,7 +102,10 @@ class User(AbstractBaseUser):
     full_name = models.TextField(
         verbose_name="이름",
     )
-    group = models.ManyToManyField(
+    password = models.TextField(
+        verbose_name="비밀번호",
+    )
+    groups = models.ManyToManyField(
         to=Group,
         verbose_name="그룹",
     )
@@ -138,13 +141,13 @@ class User(AbstractBaseUser):
         null=True,
         default=None,
     )
-    active = models.BooleanField(
-        verbose_name="활성 상태",
-        default=True,
-    )
     staff = models.BooleanField(
         verbose_name="직원 여부",
         default=False,
+    )
+    active = models.BooleanField(
+        verbose_name="활성 상태",
+        default=True,
     )
     superuser = models.BooleanField(
         verbose_name="최고관리자 여부",
@@ -152,6 +155,7 @@ class User(AbstractBaseUser):
     )
     last_login = models.DateTimeField(
         verbose_name="최종 접속 일시",
+        default=timezone.now,
     )
     date_joined = models.DateTimeField(
         verbose_name="가입 일시",
@@ -169,22 +173,53 @@ class User(AbstractBaseUser):
     )
 
     @property
-    def is_active(self):
-        return self.active
-
-    @property
     def is_staff(self):
         return self.staff
+
+    @property
+    def is_active(self):
+        return self.active
 
     @property
     def is_superuser(self):
         return self.superuser
 
     def has_perm(self, perm, obj=None):
+        """
+        Returns True if the user has the specified permission, where perm is in the format "<app label>.<permission codename>". (see documentation on permissions).
+        If the user is inactive, this method will always return False. For an active superuser, this method will always return True.
+
+        If obj is passed in, this method won’t check for a permission for the model, but for this specific object.
+        """
+
         return self.staff
 
-    def has_module_perms(self, app_label):
+    def has_perms(self, perm_list, obj=None):
+        """
+        Returns True if the user has each of the specified permissions, where each perm is in the format "<app label>.<permission codename>".
+        If the user is inactive, this method will always return False. For an active superuser, this method will always return True.
+
+        If obj is passed in, this method won’t check for permissions for the model, but for the specific object.
+        """
+        print(perm_list)
+        permissions = []
+        for group in self.groups.all():
+            permissions.extend(group.permissions.all())
+        print(self.groups.all()[0].permissions.filter(codename="add_schedules"))
+        # print(Group.objects.filter(name=self.groups))
+
         return self.staff
+
+    def has_module_perms(self, package_name):
+        """
+        Returns True if the user has any permissions in the given package (the Django app label).
+        If the user is inactive, this method will always return False.
+        For an active superuser, this method will always return True.
+        """
+        if self.active == False:
+            return False
+        elif self.active == True:
+            return self.staff
 
     class Meta:
         verbose_name = "이용자"

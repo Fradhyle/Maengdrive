@@ -1,12 +1,12 @@
 from django.contrib import admin
 from django.contrib.admin import ModelAdmin
 
-from business_hours.models import BusinessHours
+from business_hours.models import BusinessHour
 
 
 # Register your models here.
-@admin.register(BusinessHours)
-class TimetableModelAdmin(ModelAdmin):
+@admin.register(BusinessHour)
+class BusinessHourModelAdmin(ModelAdmin):
     list_display = (
         "srl",
         "branch",

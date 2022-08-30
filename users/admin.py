@@ -1,6 +1,6 @@
 from django import forms
 from django.contrib import admin
-from django.contrib.admin import ModelAdmin
+from django.contrib.auth.admin import UserAdmin
 from django.db import models
 
 from users.models import User
@@ -13,7 +13,7 @@ def deactivate_user(queryset):
 
 
 @admin.register(User)
-class UserModelAdmin(ModelAdmin):
+class UserModelAdmin(UserAdmin):
     date_hierarchy = "date_joined"
 
     list_display = (
@@ -51,6 +51,90 @@ class UserModelAdmin(ModelAdmin):
         "staff",
         "superuser",
     )
+
+    fieldsets = (
+        (
+            "이용자 기본 정보",
+            {
+                "fields": (
+                    "username",
+                    "password",
+                    "branch",
+                    "license_type",
+                    "plan_type",
+                ),
+            },
+        ),
+        (
+            "개인 정보",
+            {
+                "fields": (
+                    "full_name",
+                    "birthday",
+                    "gender",
+                    "phone",
+                ),
+            },
+        ),
+        (
+            "권한",
+            {
+                "fields": (
+                    "staff",
+                    "superuser",
+                    "groups",
+                ),
+            },
+        ),
+    )
+
+    add_fieldsets = (
+        (
+            "이용자 기본 정보",
+            {
+                "fields": (
+                    "username",
+                    "password",
+                    "branch",
+                    "license_type",
+                    "plan_type",
+                ),
+            },
+        ),
+        (
+            "개인 정보",
+            {
+                "fields": (
+                    "full_name",
+                    "birthday",
+                    "gender",
+                    "phone",
+                ),
+            },
+        ),
+        (
+            "권한",
+            {
+                "fields": (
+                    "staff",
+                    "superuser",
+                    "groups",
+                ),
+            },
+        ),
+    )
+
+    search_fields = (
+        "username",
+        "full_name",
+    )
+
+    ordering = (
+        "branch",
+        "date_joined",
+    )
+
+    filter_horizontal = ()
 
     actions = (deactivate_user,)
 

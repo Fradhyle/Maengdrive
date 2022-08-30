@@ -2,7 +2,7 @@
 {% extends "main/base.html" %}
 {% load static %}
 {% block content %}
-    <form action="" method="POST" id="timetable-form" class="container d-grid gap-3 justify-content-evenly align-items-center">
+    <form action="" method="POST" class="container d-grid gap-3 justify-content-evenly align-items-center">
         {% csrf_token %}
         {{ form.non_field_errors }}
         <div class="row">
@@ -15,6 +15,18 @@
             <label class="col-4 col-form-label text-nowrap" for="{{ form.full_name.id_for_label }}">{{ form.full_name.label }}</label>
             <div class="col">{{ form.full_name }}</div>
             {{ form.full_name.errors }}
+        </div>
+        
+        <div class="row">
+            <label class="col-4 col-form-label text-nowrap" for="{{ form.password1.id_for_label }}">{{ form.password1.label }}</label>
+            <div class="col">{{ form.password1 }}</div>
+            {{ form.password1.errors }}
+        </div>
+        
+        <div class="row">
+            <label class="col-4 col-form-label text-nowrap" for="{{ form.password2.id_for_label }}">{{ form.password2.label }}</label>
+            <div class="col">{{ form.password2 }}</div>
+            {{ form.password2.errors }}
         </div>
         
         <div class="row">
@@ -40,6 +52,12 @@
             <label class="col-4 col-form-label text-nowrap" for="{{ form.phone.id_for_label }}">{{ form.phone.label }}</label>
             <div class="col">{{ form.phone }}</div>
             {{ form.phone.errors }}
+        </div>
+        
+        <div class="row">
+            <label class="col-4 col-form-label text-nowrap" for="{{ form.branch.id_for_label }}">{{ form.branch.label }}</label>
+            <div class="col">{{ form.branch }}</div>
+            {{ form.branch.errors }}
         </div>
         
         <div class="row">

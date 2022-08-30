@@ -26,17 +26,11 @@
                             <td>{{ object.username }}</td>
                             <td>{{ object.full_name }}</td>
                             <td>{{ object.birthday }}</td>
-                            {% if object.gender == "F" %}
-                                <td>여</td>
-                            {% elif object.gender == "M" %}
-                                <td>남</td>
-                            {% else %}
-                                <td>확인 불가</td>
-                            {% endif %}
+                            <td>{{ object.get_gender_display }}</td>
                             <td>{{ object.phone }}</td>
                             <td>{{ object.branch }}</td>
-                            <td>{{ object.license_type }}</td>
-                            <td>{{ object.plan_type }}</td>
+                            <td>{{ object.get_license_type_display }}</td>
+                            <td>{{ object.get_plan_type_display }}</td>
                             {% if object.staff == False %}
                                 <td>부</td>
                             {% elif object.staff == True %}

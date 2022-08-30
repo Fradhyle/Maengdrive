@@ -1,15 +1,18 @@
 from django import forms
-from django.contrib.auth.forms import AuthenticationForm
-from django.forms import ModelChoiceField, ModelForm
+from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.models import Group
+from django.forms import ModelChoiceField
 
 from branches.models import Branch
 from users.models import User
 
 
-class UserForm(ModelForm):
+class UserForm(UserCreationForm):
     def __init__(self, *args, **kwargs):
         self.user = kwargs.pop("user")
         super(UserForm, self).__init__(*args, **kwargs)
+        self.fields["password1"].widget.attrs["class"] = "form-control"
+        self.fields["password2"].widget.attrs["class"] = "form-control"
         if self.user.is_superuser:
             self.fields["branch"] = ModelChoiceField(
                 queryset=Branch.objects.all(),
@@ -18,7 +21,7 @@ class UserForm(ModelForm):
                 widget=forms.Select(
                     attrs={
                         "class": "form-select",
-                    }
+                    },
                 ),
             )
         else:
@@ -65,9 +68,9 @@ class UserForm(ModelForm):
             "birthday",
             "gender",
             "phone",
+            "branch",
             "license_type",
             "plan_type",
-            "staff",
         )
         widgets = {
             "username": forms.TextInput(
@@ -111,29 +114,6 @@ class UserForm(ModelForm):
                 choices=[(True, "예"), (False, "아니오")],
                 attrs={
                     "class": "form-check-input",
-                },
-            ),
-        }
-
-
-class LoginForm(AuthenticationForm):
-    class Meta:
-        model = User
-        fields = (
-            "username",
-            "password",
-        )
-        widgets = {
-            "username": forms.DateInput(
-                attrs={
-                    "type": "date",
-                    "class": "form-control",
-                },
-            ),
-            "password": forms.DateInput(
-                attrs={
-                    "type": "date",
-                    "class": "form-control",
                 },
             ),
         }

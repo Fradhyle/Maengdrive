@@ -1,3 +1,5 @@
+import datetime
+
 from django import forms
 from django.forms import ModelForm
 
@@ -6,7 +8,7 @@ from branches.models import Branch
 
 class BranchForm(ModelForm):
     def format_phone_number(self, field_name):
-        phone_number = self.cleaned_data.get(field_name)
+        phone_number = self.cleaned_data[field_name]
         phone_number = phone_number.replace("-", "")
 
         if len(phone_number) == 0:
@@ -35,6 +37,14 @@ class BranchForm(ModelForm):
     def clean_phone2(self):
         return self.format_phone_number("phone2")
 
+    def clean_lesson_time(self):
+        time = self.data["lesson_time"]
+        return datetime.timedelta(minutes=int(time))
+
+    def clean_break_time(self):
+        time = self.data["break_time"]
+        return datetime.timedelta(minutes=int(time))
+
     def clean_name(self):
         name = self.cleaned_data["name"]
         if name.startswith(("개발", "테스트")) or name.endswith("점"):
@@ -52,6 +62,12 @@ class BranchForm(ModelForm):
             "address2",
             "phone1",
             "phone2",
+            "weekday_open_time",
+            "weekday_close_time",
+            "holiday_open_time",
+            "holiday_close_time",
+            "lesson_time",
+            "break_time",
         )
         widgets = {
             "name": forms.TextInput(
@@ -101,6 +117,42 @@ class BranchForm(ModelForm):
                     "type": "tel",
                     "class": "form-control",
                     "placeholder": "전화번호를 입력하세요.",
+                }
+            ),
+            "weekday_open_time": forms.TimeInput(
+                attrs={
+                    "type": "time",
+                    "class": "form-control",
+                }
+            ),
+            "weekday_close_time": forms.TimeInput(
+                attrs={
+                    "type": "time",
+                    "class": "form-control",
+                }
+            ),
+            "holiday_open_time": forms.TimeInput(
+                attrs={
+                    "type": "time",
+                    "class": "form-control",
+                }
+            ),
+            "holiday_close_time": forms.TimeInput(
+                attrs={
+                    "type": "time",
+                    "class": "form-control",
+                }
+            ),
+            "lesson_time": forms.NumberInput(
+                attrs={
+                    "aria-describedby": "minute-unit",
+                    "class": "form-control",
+                }
+            ),
+            "break_time": forms.NumberInput(
+                attrs={
+                    "aria-describedby": "minute-unit",
+                    "class": "form-control",
                 }
             ),
         }

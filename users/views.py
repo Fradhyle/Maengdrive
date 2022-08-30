@@ -1,5 +1,8 @@
+from unicodedata import name
+
 from django.contrib.auth import authenticate, login
 from django.contrib.auth import views as auth_views
+from django.contrib.auth.models import Group
 from django.db.models.fields.reverse_related import ManyToOneRel
 from django.urls import reverse_lazy
 from django.views.generic.base import TemplateView
@@ -55,6 +58,13 @@ class UserCreateView(CreateView):
     model = User
     form_class = UserForm
     success_url = reverse_lazy("users:list")
+
+    def form_valid(self, form):
+        if form.is_valid:
+            self.object = form.save()
+            member_group = Group.objects.get(name="회원")
+            self.object.groups.set([member_group])
+            return super().form_valid(form)
 
     def get_form_kwargs(self):
         kwargs = super(UserCreateView, self).get_form_kwargs()

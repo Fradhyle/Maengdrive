@@ -79,6 +79,8 @@
                                     </li>
                                     {% if user.is_authenticated %}
                                         <li>
+                                            {% now "Y" as current_year %}
+                                            {% now "W" as current_week %}
                                             <a class="dropdown-item" href="{% url 'schedules:branch_week_schedule' branch=user.branch.srl year=current_year week=current_week %}">주간 일정 보기</a>
                                         </li>
                                     {% endif %}

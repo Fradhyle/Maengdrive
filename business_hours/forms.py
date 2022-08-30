@@ -2,10 +2,10 @@ from django import forms
 from django.forms import ModelChoiceField, ModelForm
 
 from branches.models import Branch
-from business_hours.models import BusinessHours
+from business_hours.models import BusinessHour
 
 
-class BusinessHoursForm(ModelForm):
+class BusinessHourForm(ModelForm):
     branch = ModelChoiceField(
         queryset=Branch.objects.all(),
         required=True,
@@ -18,7 +18,7 @@ class BusinessHoursForm(ModelForm):
     )
 
     class Meta:
-        model = BusinessHours
+        model = BusinessHour
         fields = (
             "branch",
             "is_holiday",

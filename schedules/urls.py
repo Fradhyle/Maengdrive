@@ -14,6 +14,7 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.apps import apps
+from django.contrib.auth.decorators import permission_required
 from django.urls import path
 
 from schedules import views
@@ -43,5 +44,11 @@ urlpatterns = [
     #     views.DateScheduleListView.as_view(),
     #     name="branch_day_schedule",
     # ),
-    path("add/", views.ScheduleCreateView.as_view(), name="add"),
+    path(
+        "add/",
+        permission_required("schedules.add_schedule")(
+            views.ScheduleCreateView.as_view()
+        ),
+        name="add",
+    ),
 ]

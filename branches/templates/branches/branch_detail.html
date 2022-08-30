@@ -9,11 +9,12 @@
                 <th colspan="2">지점 정보</th>
             </tr>
         </thead>
+        
         <tbody>
             {% for key, value in verbose_names.items %}
                 <tr>
-                    <th scope="row">{{ value }}</th>
                     {% if key == "closure" %}
+                        <th scope="row">{{ value }}</th>
                         {% if object|get_attr:key == False %}
                             <td>개업</td>
                         {% elif object|get_attr:key == True %}
@@ -21,19 +22,30 @@
                         {% else %}
                             <td>확인 불가</td>
                         {% endif %}
+                    {% elif key == "weekday_open_time" %}
+                        <th scope="row">평일 영업 시간</th>
+                        <td>{{ object|get_attr:'weekday_open_time' }} ~ {{ object|get_attr:'weekday_close_time' }}</td>
+                    {% elif key == "weekday_close_time" %}
+                    {% elif key == "holiday_open_time" %}
+                        <th scope="row">휴일 영업 시간</th>
+                        <td>{{ object|get_attr:'holiday_open_time' }} ~ {{ object|get_attr:'holiday_close_time' }}</td>
+                    {% elif key == "holiday_close_time" %}
                     {% else %}
+                        <th scope="row">{{ value }}</th>
                         <td>{{ object|get_attr:key }}</td>
                     {% endif %}
                 </tr>
             {% endfor %}
         </tbody>
     </table>
-    <button type="button" class="btn btn-primary">편집</button>
+    
+    <button type="button" class="btn btn-primary" onclick="location.href='{% url 'branches:update' srl=object|get_attr:"srl" %}'">편집</button>
+    <button type="button" class="btn btn-primary" onclick="location.href='{% url 'timetables:init' branch=object|get_attr:"srl" is_holiday=False %}'">평일 시간표 초기화</button>
+    <button type="button" class="btn btn-primary" onclick="location.href='{% url 'timetables:init' branch=object|get_attr:"srl" is_holiday=True %}'">휴일 시간표 초기화</button>
     {% if object|get_attr:"closure" == False %}
         <button type="button" class="btn btn-danger" onclick="location.href='{% url 'branches:shutdown' srl=object|get_attr:"srl" %}'">폐업</button>
     {% else %}
         <button type="button" class="btn btn-primary" onclick="location.href='{% url 'branches:reopen' srl=object|get_attr:"srl" %}'">재개업</button>
-    {% endif %}    
-    <button type="button" class="btn btn-danger">삭제</button>
+    {% endif %}
     <button type="button" class="btn btn-primary" onclick="location.href='{% url 'branches:list' %}'">지점 목록</button>
 {% endblock %}

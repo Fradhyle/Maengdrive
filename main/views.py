@@ -10,7 +10,5 @@ class IndexView(TemplateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["page_title"] = "메인"
-        context["current_year"] = timezone.localtime().isocalendar()[0]
-        context["current_week"] = timezone.localtime().isocalendar()[1]
 
         return context

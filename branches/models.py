@@ -1,3 +1,5 @@
+import datetime
+
 from django.core.validators import RegexValidator
 from django.db import models
 from django.urls import reverse
@@ -53,6 +55,30 @@ class Branch(models.Model):
     closure = models.BooleanField(
         default=False,
         verbose_name="폐업 여부",
+    )
+    weekday_open_time = models.TimeField(
+        verbose_name="평일 개점 시간",
+        default=datetime.time(9, 0),
+    )
+    weekday_close_time = models.TimeField(
+        verbose_name="평일 폐점 시간",
+        default=datetime.time(23, 0),
+    )
+    holiday_open_time = models.TimeField(
+        verbose_name="휴일 개점 시간",
+        default=datetime.time(10, 0),
+    )
+    holiday_close_time = models.TimeField(
+        verbose_name="휴일 폐점 시간",
+        default=datetime.time(22, 0),
+    )
+    lesson_time = models.DurationField(
+        verbose_name="수업 시간",
+        default=datetime.timedelta(minutes=110),
+    )
+    break_time = models.DurationField(
+        verbose_name="쉬는 시간",
+        default=datetime.timedelta(minutes=10),
     )
 
     class Meta:

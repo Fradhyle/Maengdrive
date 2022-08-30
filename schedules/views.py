@@ -2,9 +2,7 @@ import datetime
 
 from django.apps import apps
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.contrib.auth.models import AnonymousUser
 from django.db.models.fields.reverse_related import ManyToOneRel
-from django.http import HttpResponseRedirect
 from django.urls import reverse_lazy
 from django.views.generic.base import TemplateView
 from django.views.generic.edit import CreateView
@@ -35,7 +33,6 @@ class ScheduleListView(ListView):
         verbose_names = {}
         fields = self.model._meta.get_fields()
         for field in fields:
-            print(field)
             if type(field) != ManyToOneRel:
                 verbose_names[field.name] = field.verbose_name
 
@@ -154,18 +151,17 @@ class WeekScheduleListView(LoginRequiredMixin, ListView):
         context["year"] = self.kwargs["year"]
         context["week"] = self.kwargs["week"]
         context["current_user"] = self.request.user
-        context["current_year"] = datetime.datetime.now().isocalendar()[0]
-        context["current_week"] = datetime.datetime.now().isocalendar()[1]
         context["dates_of_week"] = self.get_dates_of_week()
         context["verbose_names"] = self.get_verbose_names()
 
         return context
 
 
-class ScheduleCreateView(CreateView):
+class ScheduleCreateView(LoginRequiredMixin, CreateView):
     model = Schedule
     form_class = ScheduleForm
     success_url = reverse_lazy("schedules:list")
+    login_url = reverse_lazy("users:login")
 
     def get_form_kwargs(self):
         kwargs = super(ScheduleCreateView, self).get_form_kwargs()

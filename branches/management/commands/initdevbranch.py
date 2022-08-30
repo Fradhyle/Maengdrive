@@ -5,7 +5,7 @@ from branches.models import Branch
 
 
 class Command(BaseCommand):
-    help = "Initialize branch that includes developer accounts"
+    help = "Initialize branch for developer accounts"
 
     def handle(self, *args, **kwargs):
         try:

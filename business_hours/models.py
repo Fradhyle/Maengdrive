@@ -7,7 +7,7 @@ from branches.models import Branch
 
 
 # Create your models here.
-class BusinessHours(models.Model):
+class BusinessHour(models.Model):
     srl = models.BigAutoField(
         primary_key=True,
         verbose_name="연번",
