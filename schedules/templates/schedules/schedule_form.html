@@ -14,7 +14,7 @@
         {% if user_list %}
             <datalist id="user-list">
                 {% for user in user_list %}
-                    <option value="{{ user.srl }}" label="{{ user }}">
+                    <option value="{{ user }}">
                 {% endfor %}
             </datalist>
         {% endif %}

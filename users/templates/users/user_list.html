@@ -7,7 +7,10 @@
             <thead>
                 <tr>
                     {% for name in verbose_names.values %}
-                        <th scope="col">{{ name }}</th>
+                        {% if name == "그룹" %}
+                        {% else %}
+                            <th scope="col">{{ name }}</th>
+                        {% endif %}
                     {% endfor %}
                 </tr>
             </thead>
@@ -24,7 +27,7 @@
                     {% endif %}
                             <th scope="row">{{ object.srl }}</th>
                             <td>{{ object.username }}</td>
-                            <td>{{ object.full_name }}</td>
+                            <td>{{ object.name }}</td>
                             <td>{{ object.birthday }}</td>
                             <td>{{ object.get_gender_display }}</td>
                             <td>{{ object.phone }}</td>
@@ -46,12 +49,11 @@
                                 <td>확인 불가</td>
                             {% endif %}
                             <td>{{ object.date_joined }}</td>
-                            <td>{{ object.group }}</td>
                         </tr>
                 {% endfor %}
             </tbody>
         {% endif %}
     </table>
-    <button type="button" onclick="location.href='{% url 'users:add' %}'">추가</button>
-    <button type="button" onclick="location.href='{{ request.META.HTTP_REFERER }}'">이전</button>
+    <button type="button" class="btn btn-primary" onclick="location.href='{% url 'users:add' %}'">추가</button>
+    <button type="button" class="btn btn-primary" onclick="location.href='{{ request.META.HTTP_REFERER }}'">이전</button>
 {% endblock %}

@@ -28,7 +28,7 @@
                             {% else%}
                                 <td>
                                 {% for schedule in schedules %}
-                                    <a href="#{{ schedule.srl }}" title="{{ schedule.user.branch }}/{{ schedule.user.birthday|date:"ymd" }}/{{ schedule.user.gender|translate_gender_short }}">{{ schedule.user.full_name }}</a><br>
+                                    <a href="#{{ schedule.srl }}" title="{{ schedule.user.branch }}/{{ schedule.user.birthday|date:"ymd" }}/{{ schedule.user.gender|translate_gender_short }}">{{ schedule.user.name }}</a><br>
                                 {% endfor %}
                                 </td>
                             {% endif %}

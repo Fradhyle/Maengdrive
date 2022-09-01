@@ -10,12 +10,12 @@ class Schedule(models.Model):
     )
     user = models.ForeignKey(
         settings.AUTH_USER_MODEL,
-        on_delete=models.DO_NOTHING,
+        on_delete=models.CASCADE,
         verbose_name="이용자",
     )
     branch = models.ForeignKey(
         "branches.Branch",
-        on_delete=models.DO_NOTHING,
+        on_delete=models.CASCADE,
         verbose_name="지점",
     )
     date = models.DateField(
@@ -47,7 +47,7 @@ class Schedule(models.Model):
         elif self.user.gender == "F":
             gender_short = "여"
 
-        return f"{self.branch} {self.date.strftime('%y%m%d')} {self.period}교시 {self.user.full_name}{self.user.birthday.strftime('%y%m%d')}{gender_short}"
+        return f"{self.branch} {self.date.strftime('%y%m%d')} {self.period}교시 {self.user.name}{self.user.birthday.strftime('%y%m%d')}{gender_short}"
 
     # def get_absolute_url(self):
     #     return reverse("timetable:index", kwargs={"srl": self.srl})

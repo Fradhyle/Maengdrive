@@ -8,6 +8,7 @@ from django.views.generic.base import TemplateView
 from django.views.generic.edit import CreateView
 from django.views.generic.list import ListView
 
+from branches.models import Branch
 from schedules.forms import ScheduleForm
 from schedules.models import Schedule
 from timetables.models import Timetable
@@ -162,6 +163,27 @@ class ScheduleCreateView(LoginRequiredMixin, CreateView):
     form_class = ScheduleForm
     success_url = reverse_lazy("schedules:list")
     login_url = reverse_lazy("users:login")
+
+    # def form_invalid(self, form):
+    #     user_input = form["user"].value()
+    #     name = user_input.split(" ")[0]
+    #     user_info = user_input.split(" ")[1]
+    #     user_info = user_info.strip("()")
+    #     user_info = user_info.split("/")
+    #     branch = Branch.objects.get(name=user_info[0])
+    #     birthday = datetime.datetime.strptime(user_info[1], "%y%m%d")
+    #     if user_info[2] == "남":
+    #         gender = "M"
+    #     else:
+    #         gender = "F"
+    #     user = User.objects.get(
+    #         name=name,
+    #         birthday=birthday,
+    #         gender=gender,
+    #         branch=branch,
+    #     )
+    #     form.user.value = user
+    #     print(form)
 
     def get_form_kwargs(self):
         kwargs = super(ScheduleCreateView, self).get_form_kwargs()

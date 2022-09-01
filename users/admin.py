@@ -18,7 +18,7 @@ class UserModelAdmin(UserAdmin):
 
     list_display = (
         "username",
-        "full_name",
+        "name",
         "gender",
         "license_type",
         "plan_type",
@@ -32,7 +32,7 @@ class UserModelAdmin(UserAdmin):
     list_display_links = ("username",)
 
     list_editable = (
-        "full_name",
+        "name",
         "gender",
         "license_type",
         "plan_type",
@@ -69,7 +69,7 @@ class UserModelAdmin(UserAdmin):
             "개인 정보",
             {
                 "fields": (
-                    "full_name",
+                    "name",
                     "birthday",
                     "gender",
                     "phone",
@@ -105,7 +105,7 @@ class UserModelAdmin(UserAdmin):
             "개인 정보",
             {
                 "fields": (
-                    "full_name",
+                    "name",
                     "birthday",
                     "gender",
                     "phone",
@@ -126,7 +126,7 @@ class UserModelAdmin(UserAdmin):
 
     search_fields = (
         "username",
-        "full_name",
+        "name",
     )
 
     ordering = (

@@ -13,22 +13,22 @@ phone_validator = RegexValidator(
 
 class Branch(models.Model):
     srl = models.BigAutoField(
-        primary_key=True,
         verbose_name="연번",
+        primary_key=True,
     )
     name = models.TextField(
         verbose_name="지점명",
         unique=True,
     )
     equipment_count = models.DecimalField(
+        verbose_name="장비 대수",
         max_digits=2,
         decimal_places=0,
-        verbose_name="장비 대수",
         default=5,
     )
     postcode = models.CharField(
-        max_length=5,
         verbose_name="우편번호",
+        max_length=5,
     )
     address1 = models.TextField(
         verbose_name="도로명 주소",
@@ -38,23 +38,23 @@ class Branch(models.Model):
         blank=True,
     )
     phone1 = models.CharField(
+        verbose_name="전화번호 1",
         max_length=13,
         validators=[
             phone_validator,
         ],
-        verbose_name="전화번호 1",
     )
     phone2 = models.CharField(
+        verbose_name="전화번호 2",
         max_length=13,
         validators=[
             phone_validator,
         ],
-        verbose_name="전화번호 2",
         blank=True,
     )
     closure = models.BooleanField(
-        default=False,
         verbose_name="폐업 여부",
+        default=False,
     )
     weekday_open_time = models.TimeField(
         verbose_name="평일 개점 시간",

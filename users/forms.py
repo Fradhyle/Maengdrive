@@ -21,6 +21,7 @@ class UserForm(UserCreationForm):
                 widget=forms.Select(
                     attrs={
                         "class": "form-select",
+                        "autocomplete": "organization",
                     },
                 ),
             )
@@ -32,6 +33,7 @@ class UserForm(UserCreationForm):
                 widget=forms.Select(
                     attrs={
                         "class": "form-select",
+                        "autocomplete": "organization",
                     }
                 ),
             )
@@ -64,7 +66,7 @@ class UserForm(UserCreationForm):
         model = User
         fields = (
             "username",
-            "full_name",
+            "name",
             "birthday",
             "gender",
             "phone",
@@ -76,28 +78,33 @@ class UserForm(UserCreationForm):
             "username": forms.TextInput(
                 attrs={
                     "class": "form-control",
+                    "autocomplete": "username",
                 }
             ),
-            "full_name": forms.TextInput(
+            "name": forms.TextInput(
                 attrs={
                     "class": "form-control",
+                    "autocomplete": "name",
                 }
             ),
             "birthday": forms.DateInput(
                 attrs={
                     "type": "date",
                     "class": "form-control",
+                    "autocomplete": "bday",
                 }
             ),
             "gender": forms.RadioSelect(
                 attrs={
                     "class": "form-check-input",
+                    "autocomplete": "sex",
                 },
             ),
             "phone": forms.TextInput(
                 attrs={
                     "type": "tel",
                     "class": "form-control",
+                    "autocomplete": "tel-national",
                 },
             ),
             "license_type": forms.Select(

@@ -10,11 +10,16 @@
             <div class="col">{{ form.username }}</div>
             {{ form.username.errors }}
         </div>
+        <div class="row">
+            <div class="col d-flex justify-content-end">
+                <button class="btn btn-primary" type="button" onclick="makeUsername(6)">임시 아이디 생성</button>
+            </div>
+        </div>
 
         <div class="row">
-            <label class="col-4 col-form-label text-nowrap" for="{{ form.full_name.id_for_label }}">{{ form.full_name.label }}</label>
-            <div class="col">{{ form.full_name }}</div>
-            {{ form.full_name.errors }}
+            <label class="col-4 col-form-label text-nowrap" for="{{ form.name.id_for_label }}">{{ form.name.label }}</label>
+            <div class="col">{{ form.name }}</div>
+            {{ form.name.errors }}
         </div>
         
         <div class="row">
@@ -95,4 +100,19 @@
             </div>
         </div>
     </form>
+
+    <script type="text/javascript">
+        function makeUsername(length) {
+            var usernameInput = document.getElementById("{{ form.username.id_for_label }}")
+            var username = "temp_";
+            var availableCharacters = "abcdefghijklmnopqrstuvwxyz0123456789";
+            var charactersLength = availableCharacters.length;
+            for (var i=0; i<length; i++) {
+                username += availableCharacters.charAt(Math.floor(Math.random() * charactersLength))
+            }
+            
+            usernameInput.value = username;
+        }
+        
+    </script>
 {% endblock %}

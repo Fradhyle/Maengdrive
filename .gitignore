@@ -139,3 +139,6 @@ static/
 # VS Code 작업 영역 환경 설정
 /.vscode
 *.code-workspace
+
+# Visual Studio 환경 설정
+/.vs

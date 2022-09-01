@@ -1,4 +1,5 @@
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, Group
+from django.contrib.contenttypes.models import ContentType
 from django.core.validators import RegexValidator
 from django.db import models
 from django.urls import reverse
@@ -17,7 +18,7 @@ class UserManager(BaseUserManager):
     def create_user(
         self,
         username,
-        full_name,
+        name,
         birthday,
         gender,
         phone,
@@ -27,7 +28,7 @@ class UserManager(BaseUserManager):
     ):
         user = self.model(
             username=username,
-            full_name=full_name,
+            name=name,
             group=Group.objects.get_or_create(name="회원"),
             birthday=birthday,
             gender=gender,
@@ -43,10 +44,10 @@ class UserManager(BaseUserManager):
         return user
 
     def create_staff(
-        self, username, full_name, birthday, gender, phone, branch, password, **kwargs
+        self, username, name, birthday, gender, phone, branch, password, **kwargs
     ):
         user = self.create_user(
-            username, full_name, birthday, gender, phone, branch, password, kwargs
+            username, name, birthday, gender, phone, branch, password, kwargs
         )
         user.staff = True
         user.group = (Group.objects.get_or_create(name="직원"),)
@@ -55,10 +56,10 @@ class UserManager(BaseUserManager):
         return user
 
     def create_superuser(
-        self, username, full_name, birthday, gender, phone, branch, password, **kwargs
+        self, username, name, birthday, gender, phone, branch, password, **kwargs
     ):
         user = self.create_user(
-            username, full_name, birthday, gender, phone, branch, password, kwargs
+            username, name, birthday, gender, phone, branch, password, kwargs
         )
         user.staff = True
         user.superuser = True
@@ -88,7 +89,9 @@ class User(AbstractBaseUser):
     PLAN_TYPES = (
         (None, "미선택"),
         ("T", "시간제"),
-        ("G", "합격보장제"),
+        ("GA", "합격보장제"),
+        ("GC", "기능 보장제"),
+        ("GR", "도로주행 보장제"),
         ("P", "장롱 면허"),
     )
     srl = models.BigAutoField(
@@ -99,7 +102,7 @@ class User(AbstractBaseUser):
         unique=True,
         verbose_name="아이디",
     )
-    full_name = models.TextField(
+    name = models.TextField(
         verbose_name="이름",
     )
     password = models.TextField(
@@ -134,7 +137,7 @@ class User(AbstractBaseUser):
         default=None,
     )
     plan_type = models.CharField(
-        max_length=1,
+        max_length=2,
         verbose_name="요금제 유형",
         choices=PLAN_TYPES,
         blank=True,
@@ -191,8 +194,21 @@ class User(AbstractBaseUser):
 
         If obj is passed in, this method won’t check for a permission for the model, but for this specific object.
         """
-
-        return self.staff
+        if self.is_active and self.is_superuser:
+            return True
+        elif self.is_active and self.is_staff:
+            return True
+        else:
+            perm_split = perm.split(".")
+            content_type_id = ContentType.objects.get(app_label=perm_split[0])
+            codename = perm_split[1]
+            for group in self.groups.all():
+                if group.permissions.filter(
+                    content_type_id=content_type_id, codename=codename
+                ):
+                    return True
+                else:
+                    return False
 
     def has_perms(self, perm_list, obj=None):
         """
@@ -201,14 +217,12 @@ class User(AbstractBaseUser):
 
         If obj is passed in, this method won’t check for permissions for the model, but for the specific object.
         """
-        print(perm_list)
-        permissions = []
-        for group in self.groups.all():
-            permissions.extend(group.permissions.all())
-        print(self.groups.all()[0].permissions.filter(codename="add_schedules"))
-        # print(Group.objects.filter(name=self.groups))
-
-        return self.staff
+        if self.is_active and self.is_superuser:
+            return True
+        elif self.is_active and self.is_staff:
+            return True
+        else:
+            return all(self.has_perm(perm) for perm in perm_list)
 
     def has_module_perms(self, package_name):
         """
@@ -216,10 +230,10 @@ class User(AbstractBaseUser):
         If the user is inactive, this method will always return False.
         For an active superuser, this method will always return True.
         """
-        if self.active == False:
-            return False
-        elif self.active == True:
-            return self.staff
+        if self.is_active and self.is_superuser:
+            return True
+        elif self.is_active and self.is_staff:
+            return True
 
     class Meta:
         verbose_name = "이용자"
@@ -235,7 +249,7 @@ class User(AbstractBaseUser):
         elif self.gender == "F":
             gender_short = "여"
 
-        return f"{self.full_name} ({self.branch}/{self.birthday.strftime('%y%m%d')}/{gender_short})"
+        return f"{self.name} ({self.branch}/{self.birthday.strftime('%y%m%d')}/{gender_short})"
 
     def get_absolute_url(self):
         return reverse("users:detail", kwargs={"srl": self.srl})

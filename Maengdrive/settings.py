@@ -78,7 +78,7 @@ INSTALLED_APPS = [
 apps = []
 for _ in BASE_DIR.glob("*"):
     if _.is_dir():
-        if _.stem not in [".git", ".vscode"]:
+        if _.stem not in [".git", ".vs", ".vscode"]:
             if _.stem != BASE_DIR.stem:
                 apps.append(_.stem)
 
