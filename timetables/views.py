@@ -8,8 +8,7 @@ from django.views.generic.detail import DetailView
 from django.views.generic.edit import CreateView
 from django.views.generic.list import ListView
 
-from branches.models import Branch
-from business_hours.models import BusinessHour
+from branches.models import Branch, BusinessHour
 from timetables.forms import TimetableForm
 from timetables.models import Timetable
 

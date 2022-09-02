@@ -25,11 +25,17 @@
                         {% else %}
                             {% if schedules|length == 0 %}
                                 <td></td>
-                            {% else%}
+                            {% elif schedules|length == 1  %}
                                 <td>
-                                {% for schedule in schedules %}
-                                    <a href="#{{ schedule.srl }}" title="{{ schedule.user.branch }}/{{ schedule.user.birthday|date:"ymd" }}/{{ schedule.user.gender|translate_gender_short }}">{{ schedule.user.name }}</a><br>
-                                {% endfor %}
+                                    {% for schedule in schedules %}
+                                        <a href="#{{ schedule.srl }}" title="{{ schedule.user.branch }}/{{ schedule.user.birthday|date:"ymd" }}/{{ schedule.user.gender|translate_gender_short }}">{{ schedule.user.name }}</a>
+                                    {% endfor %}
+                                </td>
+                            {% elif schedules|length > 1  %}
+                                <td>
+                                    {% for schedule in schedules %}
+                                        <a href="#{{ schedule.srl }}" title="{{ schedule.user.branch }}/{{ schedule.user.birthday|date:"ymd" }}/{{ schedule.user.gender|translate_gender_short }}">{{ schedule.user.name }}</a><br>
+                                    {% endfor %}
                                 </td>
                             {% endif %}
                         {% endif %}
