@@ -23,7 +23,7 @@ class Schedule(models.Model):
     )
     period = models.DecimalField(
         max_digits=2,
-        decimal_places=0,
+        decimal_places=1,
         verbose_name="교시",
     )
 

@@ -21,6 +21,5 @@ urlpatterns = [
     path("", include("main.urls")),
     path("b/", include("branches.urls")),
     path("s/", include("schedules.urls")),
-    path("t/", include("timetables.urls")),
     path("u/", include("users.urls")),
 ]

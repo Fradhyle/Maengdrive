@@ -16,13 +16,14 @@
             <tbody class="table-group-divider">
                 {% for object in object_list %}
                     {% if object.is_holiday == False %}
-                        <tr class="table-primary">
+                        <tr class="table-primary" onclick="location.href='{% url 'branches:timetable_detail' branch=object.branch.srl %}'">
                     {% elif object.is_holiday == True %}
-                        <tr class="table-danger">
+                        <tr class="table-danger" onclick="location.href='{% url 'branches:timetable_detail' branch=object.branch.srl %}'">
                     {% else %}
-                        <tr class="table-warning">
+                        <tr class="table-warning" onclick="location.href='{% url 'branches:timetable_detail' branch=object.branch.srl %}'">
                     {% endif %}
-                            <th scope="row"><a href="{% url 'timetables:detail' branch=object.branch.srl %}">{{ object.branch }}</a></th>
+                            <th scope="row">{{ object.srl }}</th>
+                            <td>{{ object.branch }}</td>
                             <td>{{ object.period }}</td>
                             <td>{{ object.start_time }}</td>
                             <td>{{ object.end_time }}</td>
@@ -35,8 +36,10 @@
     <div class="container d-grid">
         <div class="row">
             <div class="col">
-                <button type="button" class="btn btn-primary" onclick="location.href='{% url 'timetables:add' %}'">추가</button>
-                <button type="button" class="btn btn-primary" onclick="location.href='{{ request.META.HTTP_REFERER }}'">이전</button>
+                <div class="btn-group" role="group">
+                    <button type="button" class="btn btn-primary" onclick="location.href='{% url 'branches:timetable_add' %}'">추가</button>
+                    <button type="button" class="btn btn-primary" onclick="location.href='{{ request.META.HTTP_REFERER }}'">이전</button>
+                </div>
             </div>
             <div class="col">
                 <span class="current">

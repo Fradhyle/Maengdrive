@@ -1,9 +1,9 @@
 import datetime
 
 from django import forms
-from django.forms import ModelForm
+from django.forms import ModelChoiceField, ModelForm
 
-from branches.models import Branch
+from branches.models import Branch, Hour, Timetable
 
 
 class BranchForm(ModelForm):
@@ -62,10 +62,6 @@ class BranchForm(ModelForm):
             "address2",
             "phone1",
             "phone2",
-            "weekday_open_time",
-            "weekday_close_time",
-            "holiday_open_time",
-            "holiday_close_time",
             "lesson_time",
             "break_time",
         )
@@ -125,30 +121,6 @@ class BranchForm(ModelForm):
                     "autocomplete": "tel-national",
                 }
             ),
-            "weekday_open_time": forms.TimeInput(
-                attrs={
-                    "type": "time",
-                    "class": "form-control",
-                }
-            ),
-            "weekday_close_time": forms.TimeInput(
-                attrs={
-                    "type": "time",
-                    "class": "form-control",
-                }
-            ),
-            "holiday_open_time": forms.TimeInput(
-                attrs={
-                    "type": "time",
-                    "class": "form-control",
-                }
-            ),
-            "holiday_close_time": forms.TimeInput(
-                attrs={
-                    "type": "time",
-                    "class": "form-control",
-                }
-            ),
             "lesson_time": forms.NumberInput(
                 attrs={
                     "aria-describedby": "minute-unit",
@@ -160,5 +132,103 @@ class BranchForm(ModelForm):
                     "aria-describedby": "minute-unit",
                     "class": "form-control",
                 }
+            ),
+        }
+
+
+class HourForm(ModelForm):
+    branch = ModelChoiceField(
+        queryset=Branch.objects.all(),
+        required=True,
+        label="지점",
+        widget=forms.Select(
+            attrs={
+                "class": "form-select",
+            },
+        ),
+    )
+
+    class Meta:
+        model = Hour
+        fields = (
+            "branch",
+            "is_holiday",
+            "open_time",
+            "close_time",
+        )
+        widgets = {
+            "name": forms.TextInput(
+                attrs={
+                    "class": "form-control",
+                    "placeholder": "지점명을 입력하세요.",
+                    "autocomplete": "organization",
+                }
+            ),
+            "is_holiday": forms.NullBooleanSelect(
+                attrs={
+                    "class": "form-select",
+                }
+            ),
+            "open_time": forms.TimeInput(
+                attrs={
+                    "type": "time",
+                    "class": "form-control",
+                }
+            ),
+            "close_time": forms.TimeInput(
+                attrs={
+                    "type": "time",
+                    "class": "form-control",
+                }
+            ),
+        }
+
+
+class TimetableForm(ModelForm):
+    branch = ModelChoiceField(
+        queryset=Branch.objects.all(),
+        required=True,
+        label="지점",
+        widget=forms.Select(
+            attrs={
+                "class": "form-select",
+            },
+        ),
+    )
+
+    class Meta:
+        model = Timetable
+        fields = (
+            "branch",
+            "period",
+            "is_holiday",
+            "start_time",
+            "end_time",
+        )
+        widgets = {
+            "period": forms.NumberInput(
+                attrs={
+                    "class": "form-control",
+                    "placeholder": "몇 교시인지 입력하세요.",
+                },
+            ),
+            "is_holiday": forms.NullBooleanSelect(
+                attrs={
+                    "class": "form-select",
+                },
+            ),
+            "start_time": forms.TimeInput(
+                attrs={
+                    "type": "time",
+                    "class": "form-control",
+                    "placeholder": "교시 시작 시간을 입력하세요.",
+                },
+            ),
+            "end_time": forms.TimeInput(
+                attrs={
+                    "type": "time",
+                    "class": "form-control",
+                    "placeholder": "교시 종료 시간을 입력하세요.",
+                },
             ),
         }

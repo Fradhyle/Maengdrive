@@ -25,11 +25,11 @@
             <tbody class="table-group-divider">
                 {% for object in object_list %}
                     {% if object.closure == False %}
-                        <tr class="table-success" onclick="location.href='{% url 'branches:detail' srl=object.srl %}'">
+                        <tr class="table-success" onclick="location.href='{% url 'branches:branch_detail' srl=object.srl %}'">
                     {% elif object.closure == True %}
-                        <tr class="table-danger" onclick="location.href='{% url 'branches:detail' srl=object.srl %}'">
+                        <tr class="table-danger" onclick="location.href='{% url 'branches:branch_detail' srl=object.srl %}'">
                     {% else %}
-                        <tr class="table-warning" onclick="location.href='{% url 'branches:detail' srl=object.srl %}'">
+                        <tr class="table-warning" onclick="location.href='{% url 'branches:branch_detail' srl=object.srl %}'">
                     {% endif %}
                             <th scope="row">{{ object.srl }}</th>
                             <td>{{ object.name }}</td>

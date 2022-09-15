@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+{% extends "main/base.html" %}
+{% load static %}
+{% block content %}
+    <table class="table table-hover table-bordered text-center">
+        {% if verbose_names %}
+            <thead>
+                <tr>
+                    {% for name in verbose_names.values %}
+                        {% if name != "휴일 여부" %}
+                            <th scope="col">{{ name }}</th>
+                        {% endif %}
+                    {% endfor %}
+                    <th scope="col">시간표 초기화</th>
+                </tr>
+            </thead>
+        {% endif %}
+        {% if object_list %}
+            <tbody class="table-group-divider">
+                {% for object in object_list %}
+                    {% if object.is_holiday == False %}
+                        <tr class="table-success">
+                    {% elif object.is_holiday == True %}
+                        <tr class="table-danger">
+                    {% else %}
+                        <tr class="table-warning">
+                    {% endif %}
+                            <th scope="row">{{ object.srl }}</th>
+                            <td><a href="{% url 'branches:timetable_detail' branch=object.branch.srl %}">{{ object.branch }}</a></td>
+                            <td>{{ object.open_time }}</td>
+                            <td>{{ object.close_time }}</td>
+                            <td><button type="button" class="btn btn-primary" title="수업 시간 110분, 쉬는 시간 10분을 기준으로 기존 시간표를 삭제하고 시간표를 새로 생성 합니다." onclick="location.href='{% url 'branches:timetable_init' branch=object.branch.srl is_holiday=object.is_holiday %}'">초기화</button></td>
+                        </tr>
+                {% endfor %}
+            </tbody>
+        {% endif %}
+    </table>
+    <div class="container d-grid">
+        <div class="row">
+            <div class="col">
+                <div class="btn-group" role="group">
+                    <button type="button" class="btn btn-primary" onclick="location.href='{% url 'branches:hour_add' %}'">추가</button>
+                    <button type="button" class="btn btn-primary" onclick="location.href='{{ request.META.HTTP_REFERER }}'">이전</button>
+                </div>
+            </div>
+            <div class="col">
+                <span class="current">
+                    {{ page_obj.paginator.num_pages }}쪽 중 {{ page_obj.number }}쪽
+                </span>
+            </div>
+            <div class="col">
+                <nav aria-label="페이지">
+                    <ul class="pagination">
+                        <li class="page-item {% if page_obj.has_previous == False %}disabled{% endif %}">
+                            <a class="page-link" href="?page=1">처음</a>
+                        </li>
+                        <li class="page-item {% if page_obj.has_previous == False %}disabled{% endif %}">
+                            <a class="page-link" href="{% if page_obj.has_previous %}?page={{ page_obj.previous_page_number }}{% else %}#{% endif %}">이전</a>
+                        </li>
+                        {% if page_obj.has_previous and page_obj.previous_page_number|add:"-1" > 0 %}
+                            <li class="page-item">
+                                <a class="page-link" href="?page={{ page_obj.previous_page_number|add:"-1" }}">{{ page_obj.previous_page_number|add:"-1" }}</a>
+                            </li>
+                        {% endif %}
+                        {% if page_obj.has_previous %}
+                            <li class="page-item">
+                                <a class="page-link" href="?page={{ page_obj.previous_page_number }}">{{ page_obj.previous_page_number }}</a>
+                            </li>
+                        {% endif %}
+                        <li class="page-item active" aria-current="page">
+                            <a class="page-link" href="?page={{ page_obj.number }}">{{ page_obj.number }}</a>
+                        </li>
+                        {% if page_obj.has_next %}
+                            <li class="page-item">
+                                <a class="page-link" href="?page={{ page_obj.next_page_number }}">{{ page_obj.next_page_number }}</a>
+                            </li>
+                        {% endif %}
+                        {% if page_obj.has_next and page_obj.next_page_number|add:"1" <= page_obj.paginator.num_pages %}
+                            <li class="page-item">
+                                <a class="page-link" href="?page={{ page_obj.next_page_number|add:"1" }}">{{ page_obj.next_page_number|add:"1" }}</a>
+                            </li>
+                        {% endif %}
+                        <li class="page-item {% if page_obj.has_next == False %}disabled{% endif %}">
+                            <a class="page-link" href="{% if page_obj.has_next %}?page={{ page_obj.next_page_number }}{% else %}#{% endif %}">다음</a>
+                        </li>
+                        <li class="page-item {% if page_obj.has_next == False %}disabled{% endif %}">
+                            <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}">끝</a>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </div>
+{% endblock %}

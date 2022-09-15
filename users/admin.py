@@ -8,7 +8,7 @@ from users.models import User
 
 # Register your models here.
 @admin.action(description="선택한 이용자를 비활성화합니다")
-def deactivate_user(queryset):
+def deactivate_user(modeladmin, request, queryset):
     queryset.update(active=False)
 
 

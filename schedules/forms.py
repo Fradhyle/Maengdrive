@@ -3,9 +3,8 @@ import datetime
 from django import forms
 from django.forms import ModelChoiceField, ModelForm
 
-from branches.models import Branch
+from branches.models import Branch, Timetable
 from schedules.models import Schedule
-from timetables.models import Timetable
 from users.models import User
 
 
@@ -36,6 +35,23 @@ class ScheduleForm(ModelForm):
                     }
                 ),
             )
+            max_period = Timetable.objects.all().order_by("-period")[0].period
+            self.fields["period"] = forms.DecimalField(
+                label="교시",
+                min_value=1,
+                max_value=max_period,
+                max_digits=2,
+                decimal_places=1,
+                step_size=0.5,
+                widget=forms.NumberInput(
+                    attrs={
+                        "class": "form-control",
+                        "min": 1,
+                        "step": 0.5,
+                        "max": max_period,
+                    },
+                ),
+            )
         else:
             self.fields["branch"] = ModelChoiceField(
                 queryset=Branch.objects.filter(branch=self.user.branch),
@@ -45,6 +61,27 @@ class ScheduleForm(ModelForm):
                     attrs={
                         "class": "form-select",
                     }
+                ),
+            )
+            max_period = (
+                Timetable.objects.filter(branch=self.user.branch)
+                .order_by("-period")[0]
+                .period
+            )
+            self.fields["period"] = forms.DecimalField(
+                label="교시",
+                min_value=1,
+                max_value=max_period,
+                max_digits=2,
+                decimal_places=1,
+                step_size=0.5,
+                widget=forms.NumberInput(
+                    attrs={
+                        "class": "form-control",
+                        "min": 1,
+                        "step": 0.5,
+                        "max": max_period,
+                    },
                 ),
             )
 
@@ -81,12 +118,6 @@ class ScheduleForm(ModelForm):
                 attrs={
                     "type": "date",
                     "class": "form-control",
-                },
-            ),
-            "period": forms.NumberInput(
-                attrs={
-                    "class": "form-control",
-                    "min": 1,
                 },
             ),
         }

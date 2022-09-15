@@ -1,8 +1,11 @@
 <!DOCTYPE html>
 {% extends "main/base.html" %}
 {% load static %}
-{% load get_attr %}
+{% load filters %}
+{% load tags %}
 {% block content %}
+{{ object|get_object_name }}
+{% get_field_verbose_name object|get_model_name "closure" %}
     <table class="table">
         <thead>
             <tr>
@@ -14,38 +17,35 @@
             {% for key, value in verbose_names.items %}
                 <tr>
                     {% if key == "closure" %}
-                        <th scope="row">{{ value }}</th>
-                        {% if object|get_attr:key == False %}
-                            <td>개업</td>
-                        {% elif object|get_attr:key == True %}
-                            <td>폐업</td>
-                        {% else %}
-                            <td>확인 불가</td>
-                        {% endif %}
-                    {% elif key == "weekday_open_time" %}
-                        <th scope="row">평일 영업 시간</th>
-                        <td>{{ object|get_attr:"weekday_open_time" }} ~ {{ object|get_attr:"weekday_close_time" }}</td>
-                    {% elif key == "weekday_close_time" %}
-                    {% elif key == "holiday_open_time" %}
-                        <th scope="row">휴일 영업 시간</th>
-                        <td>{{ object|get_attr:"holiday_open_time" }} ~ {{ object|get_attr:"holiday_close_time" }}</td>
-                    {% elif key == "holiday_close_time" %}
+                        <th scope="row">{% get_field_verbose_name object|get_model_name key %}</th>
+                        <td>{{ object.get_closure_display }}</td>
                     {% else %}
                         <th scope="row">{{ value }}</th>
                         <td>{{ object|get_attr:key }}</td>
                     {% endif %}
                 </tr>
             {% endfor %}
+            {% for object in hours %}
+                <tr>
+                    {% if object.is_holiday %}
+                        <th scope="row">휴일 영업 시간</th>
+                        <td>{{ object.open_time }} ~ {{ object.close_time }}<td>
+                    {% else %}
+                        <th scope="row">평일 영업 시간</th>
+                        <td>{{ object.open_time }} ~ {{ object.close_time }}<td>
+                    {% endif %}
+                </tr>
+            {% endfor %}
         </tbody>
     </table>
 
-    <button type="button" class="btn btn-primary" onclick="location.href='{% url 'branches:update' srl=object|get_attr:'srl' %}'">편집</button>
-    <button type="button" class="btn btn-primary" onclick="location.href='{% url 'timetables:init' branch=object|get_attr:'srl' is_holiday=False %}'">평일 시간표 초기화</button>
-    <button type="button" class="btn btn-primary" onclick="location.href='{% url 'timetables:init' branch=object|get_attr:'srl' is_holiday=True %}'">휴일 시간표 초기화</button>
+    <button type="button" class="btn btn-primary" onclick="location.href='{% url 'branches:branch_update' srl=object|get_attr:'srl' %}'">편집</button>
+    <button type="button" class="btn btn-primary" onclick="location.href='{% url 'branches:timetable_init' branch=object|get_attr:'srl' is_holiday=False %}'">평일 시간표 초기화</button>
+    <button type="button" class="btn btn-primary" onclick="location.href='{% url 'branches:timetable_init' branch=object|get_attr:'srl' is_holiday=True %}'">휴일 시간표 초기화</button>
     {% if object|get_attr:"closure" == False %}
-        <button type="button" class="btn btn-danger" onclick="location.href='{% url 'branches:shutdown' srl=object|get_attr:'srl' %}'">폐업</button>
+        <button type="button" class="btn btn-danger" onclick="location.href='{% url 'branches:branch_shutdown' srl=object|get_attr:'srl' %}'">폐업</button>
     {% else %}
-        <button type="button" class="btn btn-primary" onclick="location.href='{% url 'branches:reopen' srl=object|get_attr:'srl' %}'">재개업</button>
+        <button type="button" class="btn btn-primary" onclick="location.href='{% url 'branches:branch_open' srl=object|get_attr:'srl' %}'">재개업</button>
     {% endif %}
-    <button type="button" class="btn btn-primary" onclick="location.href='{% url 'branches:list' %}'">지점 목록</button>
+    <button type="button" class="btn btn-primary" onclick="location.href='{% url 'branches:branch_list' %}'">지점 목록</button>
 {% endblock %}

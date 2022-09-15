@@ -13,14 +13,7 @@
         
         <div class="row">
             <label class="col-4 col-form-label text-nowrap" for="{{ form.is_holiday.id_for_label }}">{{ form.is_holiday.label }}</label>
-            <div class="col">
-                {% for choice in form.is_holiday %}
-                    <div class="form-check">
-                        {{ choice.tag }}
-                        <label class="form-check-label" for="{{ choice.id_for_label }}">{{ choice.choice_label }}</label>
-                    </div>
-                {% endfor %}
-            </div>
+            <div class="col">{{ form.is_holiday }}</div>
             {{ form.is_holiday.errors }}
         </div>
         

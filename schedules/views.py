@@ -8,10 +8,9 @@ from django.views.generic.base import TemplateView
 from django.views.generic.edit import CreateView
 from django.views.generic.list import ListView
 
-from branches.models import Branch
+from branches.models import Branch, Timetable
 from schedules.forms import ScheduleForm
 from schedules.models import Schedule
-from timetables.models import Timetable
 from users.models import User
 
 

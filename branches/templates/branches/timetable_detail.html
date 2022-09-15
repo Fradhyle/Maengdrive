@@ -13,7 +13,7 @@
         
         <div class="row">
             <div class="col">
-                <table class="table table-responsive text-center">
+                <table class="table table-bordered table-hover table-responsive text-center">
                     <thead>
                         <tr>
                             <th colspan="3">평일 시간표</th>
@@ -27,9 +27,9 @@
                     <tbody>
                         {% if detail %}
                             {% for record in detail %}
-                                <tr>
+                                <tr onclick="location.href='{% url 'branches:timetable_update' srl=record.srl %}'">
                                     {% if record.is_holiday == False %}
-                                        <td>{{ record.period }}</td>
+                                        <th scope="row">{{ record.period }}</th>
                                         <td>{{ record.start_time }}</td>
                                         <td>{{ record.end_time }}</td>
                                     {% endif %}
@@ -41,7 +41,7 @@
             </div>
             
             <div class="col">
-                <table class="table table-responsive text-center">
+                <table class="table table-bordered table-hover table-responsive text-center">
                     <thead>
                         <tr>
                             <th colspan="3">휴일 시간표</th>
@@ -55,9 +55,9 @@
                     <tbody>
                         {% if detail %}
                             {% for record in detail %}
-                                <tr>
+                                <tr onclick="location.href='{% url 'branches:timetable_update' srl=record.srl %}'">
                                     {% if record.is_holiday == True %}
-                                        <td>{{ record.period }}</td>
+                                        <th scope="row">{{ record.period }}</th>
                                         <td>{{ record.start_time }}</td>
                                         <td>{{ record.end_time }}</td>
                                     {% endif %}
