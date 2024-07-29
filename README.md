@@ -1,8 +1,8 @@
 # Maengdrive
 ## 맹드라이브 Django 기반 웹사이트 및 관리 시스템 구축 프로젝트
 ### 환경
-- Anaconda
-- Django
+- Anaconda (최신 버전 유지)
+- Django (최신 버전 유지)
 ### 목표
 #### 최소 기능 제품 구현
 ##### 디자인은 최대한 나중에
