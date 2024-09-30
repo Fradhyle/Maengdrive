@@ -1,4 +1,5 @@
 # Maengdrive
+# This project will be merged to other project. Please refer to [IMX](https://github.com/Fradhyle/IMX) Project
 ## Django 기반 웹사이트 및 예약 일정 관리 시스템 구축 프로젝트
 ### 환경
 - Anaconda (최신 버전 유지)
